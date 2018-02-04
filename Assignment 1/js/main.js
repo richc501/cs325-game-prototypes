@@ -38,7 +38,6 @@ window.onload = function() {
     	ground = game.add.sprite(400,600,'green');
 
     	sprite_club = game.add.sprite(1,0, 'golfclub');
-    	sprite_club.body.fixedRotation = true;
     	sprite_ball = game.add.sprite(0,1, 'golfball');
     	sprite_club.anchor.setTo( 0, 1 );
     	game.physics.p2.enable(sprite_club);
