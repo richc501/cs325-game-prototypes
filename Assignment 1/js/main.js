@@ -15,35 +15,74 @@ window.onload = function() {
     function preload() {
         // Load an image and call it 'logo'.
         game.load.image( 'logo', 'assets/phaser.png' );
+        game.load.image( 'background', 'assets/background.png' );
+        game.load.image( 'green', 'assets/green.png');
+        game.load.image( 'golfclub', 'assets/golfclub.png');
+        game.load.image( 'golfball', 'assets/golfball.png');
     }
     
-    var bouncy;
-    
+    let sprite_club;
+    let sprite_ball;
+    let ground;
+    let up;
+    let down;
+    let left;
+    let right;
+    let rotateLeft;
+    let rotateRight;
     function create() {
-        // Create a sprite at the center of the screen using the 'logo' image.
-        bouncy = game.add.sprite( game.world.centerX, game.world.centerY, 'logo' );
-        // Anchor the sprite at its center, as opposed to its top-left corner.
-        // so it will be truly centered.
-        bouncy.anchor.setTo( 0.5, 0.5 );
-        
-        // Turn on the arcade physics engine for this sprite.
-        game.physics.enable( bouncy, Phaser.Physics.ARCADE );
-        // Make it bounce off of the world bounds.
-        bouncy.body.collideWorldBounds = true;
-        
-        // Add some text using a CSS style.
-        // Center it in X, and position its top 15 pixels from the top of the world.
-        var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-        var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
-        text.anchor.setTo( 0.5, 0.0 );
+    	game.add.image(0,0,'background');
+    	
+    	game.physics.startSystem(Phaser.Physics.P2JS);
+    	game.physics.p2.restitution = 0.8;
+    	ground = game.add.sprite(400,600,'green');
+
+    	sprite_club = game.add.sprite(1,0, 'golfclub');
+    	sprite_club.body.setZeroDamping();
+    	sprite_club.body.fixedRotation = true;
+    	sprite_ball = game.add.sprite(0,1, 'golfball');
+    	sprite_club.anchor.setTo( 0, 1 );
+    	game.physics.p2.enable(sprite_club);
+    	game.physics.p2.enable(sprite_ball);
+    	game.physics.p2.enable(ground);
+    	ground.body.static = true;//makes ground not move
+    	up = game.input.keyboard.addKey(Phaser.Keyboard.W);
+    	down = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    	left = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    	right = game.input.keyboard.addKey(Phaser.Keyboard.D);
+    	rotateLeft = game.input.keyboard.addKey(Phaser.Keyboard.Q);
+    	rotateRight = game.input.keyboard.addKey(Phaser.Keyboard.E);
     }
     
     function update() {
-        // Accelerate the 'logo' sprite towards the cursor,
-        // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
-        // in X or Y.
-        // This function returns the rotation angle that makes it visually match its
-        // new trajectory.
-        bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, game.input.activePointer, 500, 500, 500 );
+    	if(left.isDown)
+    	{
+    		sprite_club.body.moveLeft(200);
+    	} 
+    	else if(right.isDown)
+    	{
+    		sprite_club.body.moveRight(200);
+    	}
+    	else if(down.isDown)
+    	{
+    		sprite_club.body.moveDown(200);
+    	}
+    	else if(up.isDown)
+    	{
+    		sprite_club.body.moveUp(200);
+    	}
+    	if(rotateLeft.isDown)
+    	{
+    		sprite_club.body.rotateLeft(100);
+    	}
+    	else if(rotateRight.isDown)
+    	{
+    		sprite_club.body.rotateRight(100);
+    	}
+    	else
+    	{
+    		sprite_club.body.setZeroRotation();
+    	}
+    		
     }
 };
