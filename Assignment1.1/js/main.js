@@ -19,6 +19,7 @@ window.onload = function() {
         game.load.image( 'green', 'assets/green.png');
         game.load.image( 'golfclub', 'assets/golfclub.png');
         game.load.image( 'golfball', 'assets/golfball.png');
+        game.load.physics('sprite_physics', 'assets/sprite_physics.json');
         game.load.tilemap('map1', 'assets/tiles/tilesmap2_Tile Layer 1.csv', null, Phaser.Tilemap.CSV);
         game.load.tilemap('map2', 'assets/tiles/tilesmap2_Tile Layer 2.csv', null, Phaser.Tilemap.CSV);
         game.load.image('tiles', 'assets/ground.png');
@@ -54,10 +55,14 @@ window.onload = function() {
     	
     	game.physics.p2.convertTilemap(map1, layer1);
     	
-    	game.physics.p2.restitution = 0.8;
+    	game.physics.p2.restitution = 0.5;
     	
     	sprite_club = game.add.sprite(400,game.world.height-250, 'golfclub');
     	sprite_ball = game.add.sprite(400,game.world.height-400, 'golfball');
+    	//sprite_club.body.clearShapes();
+    	//sprite_ball.body.clearShapes();
+    	//sprite_club.body.loadPolygon('sprite_physics','golfclub');
+    	//sprite_ball.body.loadPolygon('sprite_physics','golfball');
     	sprite_club.anchor.setTo( 0, 1 );
     	sprite_ball.scale.setTo(0.5,0.5);
     	game.physics.p2.enable(sprite_club);
@@ -75,6 +80,7 @@ window.onload = function() {
     }
     
     function update() {
+    	sprite_club.body.setZeroVelocity();
     	if(left.isDown)
     	{
     		sprite_club.body.moveLeft(200);
