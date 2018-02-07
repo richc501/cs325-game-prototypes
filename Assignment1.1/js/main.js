@@ -59,10 +59,6 @@ window.onload = function() {
     	
     	sprite_club = game.add.sprite(400,game.world.height-250, 'golfclub');
     	sprite_ball = game.add.sprite(400,game.world.height-400, 'golfball');
-    	//sprite_club.body.clearShapes();
-    	//sprite_ball.body.clearShapes();
-    	//sprite_club.body.loadPolygon('sprite_physics','golfclub');
-    	//sprite_ball.body.loadPolygon('sprite_physics','golfball');
     	sprite_club.anchor.setTo( 0, 1 );
     	sprite_ball.scale.setTo(0.5,0.5);
     	game.physics.p2.enable(sprite_club);
@@ -79,7 +75,7 @@ window.onload = function() {
     	rotateRight = game.input.keyboard.addKey(Phaser.Keyboard.E);
     }
     
-    function update() {
+    function update() { //https://phaser.io/examples/v2/p2-physics/world-move
     	sprite_club.body.setZeroVelocity();
     	if(left.isDown)
     	{
