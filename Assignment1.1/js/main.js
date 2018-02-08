@@ -19,7 +19,6 @@ window.onload = function() {
         game.load.image( 'green', 'assets/green.png');
         game.load.image( 'golfclub', 'assets/golfclub.png');
         game.load.image( 'golfball', 'assets/golfball.png');
-        game.load.physics('sprite_physics', 'assets/sprite_physics.json');
         game.load.tilemap('map1', 'assets/tiles/tilesmap2_Tile Layer 1.csv', null, Phaser.Tilemap.CSV);
         game.load.tilemap('map2', 'assets/tiles/tilesmap2_Tile Layer 2.csv', null, Phaser.Tilemap.CSV);
         game.load.image('tiles', 'assets/ground.png');
