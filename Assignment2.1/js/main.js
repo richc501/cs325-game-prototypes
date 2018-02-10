@@ -18,6 +18,9 @@ let healthBar;
 let lives = 3;
 let lifeBar;
 let stateText;
+let explosions;
+let cleavers;
+let cleaverTime=0;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
     // You will need to change the fourth parameter to "new Phaser.Game()" from
@@ -38,6 +41,8 @@ window.onload = function() {
     	game.load.image('heart_left', 'assets/hearts/Hearts_left.png');
     	game.load.image('heart_right', 'assets/hearts/Hearts_right.png');
     	game.load.image('Lives', 'assets/lives/chicken_lives.png');
+    	game.load.spritesheet('kaboom', 'assets/weapon/explode.png', 128, 128);
+    	game.load.image('cleaver', 'assets/weapon/cleaver.png');
     }
     
     function create() {
@@ -56,10 +61,20 @@ window.onload = function() {
     	groundLayer.resizeWorld();
     	map.setCollisionBetween(0,7, true, 'GroundLayer')
     	
-    	
+    	cleavers = game.add.group();
+    	cleavers.enableBody = true;
+    	cleavers.physicsBodyType = Phaser.Physics.ARCADE;
+    	cleavers.createMultiple(100, 'cleaver');
+    	cleavers.setAll('anchor.x', 0.5);
+    	cleavers.setAll('anchor.y', 1);
+    	cleavers.setAll('outOfBoundsKill', true);
+    	cleavers.setAll('checkWorldBounds', true);
+        
     	chicken_sprite = game.add.sprite(0,game.world.centerY, 'chicken');
     	game.physics.enable(chicken_sprite, Phaser.Physics.ARCADE);
     	
+        explosions = game.add.group();
+        explosions.createMultiple(30, 'kaboom');
     	
     	chicken_sprite.body.collideWorldBounds = true;
     	chicken_sprite.checkWorldBounds = true;
@@ -104,6 +119,39 @@ window.onload = function() {
         stateText.fixedToCamera = true;//https://phaser.io/examples/v2/camera/fixed-to-camera
         stateText.cameraOffset.setTo(400,300,game.world.centerY, 20);
         stateText.visible = false;
+        
+
+        
+        chicken_sprite.body.onCollide = new Phaser.Signal();
+        chicken_sprite.body.onCollide.add(cleaverHitsChicken, this);
+    }
+    function cleaverHitsChicken(cleavers, chicken_sprite) {
+    	cleavers.kill
+		health--;
+    	let lifeHearts = healthBar.getFirstAlive();
+    	if(lifeHearts)
+    		lifeHearts.kill();
+        // When the player dies
+        if (health < 1)
+        {
+        	respawn(chicken_sprite);
+        }
+    }
+    function throwCleaver() {//https://phaser.io/examples/v2/games/invaders
+    	if(game.time.now > cleaverTime)
+    	{
+    		let blade = cleavers.getFirstExists(false);
+    		if(blade)
+    		{
+    			let randomX=game.rnd.integerInRange(0,game.world.width);
+    			//let randomY=game.rnd.integerInRange(0,game.world.height);
+    			
+    			blade.reset(randomX, 0);
+    			//blade.body.velocity.y = 200+game.rnd.integerInRange(0,500);
+    			game.physics.arcade.moveToObject(blade,chicken_sprite,120);
+    			cleaverTime = game.time.now + 200;
+    		}
+    	}
     }
     function respawn(sprite) {
     	lives--;
@@ -124,15 +172,19 @@ window.onload = function() {
         } else {
             game.camera.y = 350;
             game.camera.x = 0;
+            health = 10;
+            healthBar.callAll('revive');
         	sprite.reset(0,game.world.centerY);
         }
     }
     function restart () {
 
         //  A new level starts
+    	health = 10;
         lives = 3;
         //resets the life count
         lifeBar.callAll('revive');
+        healthBar.callAll('revive');
         //revives the player
         chicken_sprite.revive();
         chicken_sprite.reset(0,game.world.centerY);
@@ -153,6 +205,18 @@ window.onload = function() {
     			onWall = true;
     		}
     	});
+    	game.physics.arcade.collide(cleavers, groundLayer, function(cleavers, groundLayer) {
+    		cleavers.body.velocity.x = 0;
+    		cleavers.body.velocity.y = 0;
+    	});
+    	game.physics.arcade.collide(chicken_sprite, cleavers, function(chicken_sprite, cleavers) {
+    		cleavers.body.velocity.x = 0;
+    		cleavers.body.velocity.y = 0;
+    	});
+        if (game.time.now > cleaverTime)
+        {
+        	throwCleaver();
+        }
     	if(left.isDown && !onWall) {
     		chicken_sprite.body.velocity.x = -150;
     		if(facing != 'left') {
