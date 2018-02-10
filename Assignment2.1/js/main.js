@@ -27,8 +27,9 @@ window.onload = function() {
     // You will need to change the paths you pass to "game.load.image()" or any other
     // loading functions to reflect where you are putting the assets.
     // All loading functions will typically all be found inside "preload()".
-    
-    let game = new Phaser.Game( 800, 600, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update } );
+    //Hold w Press D to wall jump right
+	//Hold w Press D let go of D then you wall jump left
+    let game = new Phaser.Game( 800, 600, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render } );
     
     function preload() {
     	game.load.spritesheet('chicken','assets/chicken_sprite_sheet.png', 16, 16);//https://opengameart.org/content/solarus-chicken
@@ -110,26 +111,28 @@ window.onload = function() {
     	if(life)
     		life.kill();
         // When the player dies
-        if (lives < 0)
+        if (lives < 1)
         {
         	sprite.kill();
-            
+            game.camera.y = 350;
+            game.camera.x = 0;
             stateText.text=" GAME OVER \n Click to restart";
             stateText.visible = true;
 
             //the "click to restart" handler
             game.input.onTap.addOnce(restart,this);
         } else {
+            game.camera.y = 350;
+            game.camera.x = 0;
         	sprite.reset(0,game.world.centerY);
         }
     }
     function restart () {
 
         //  A new level starts
-        
+        lives = 3;
         //resets the life count
         lifeBar.callAll('revive');
-
         //revives the player
         chicken_sprite.revive();
         chicken_sprite.reset(0,game.world.centerY);
@@ -228,5 +231,10 @@ window.onload = function() {
         		}
         	}
         }
+    }
+    function render() {
+
+        game.debug.cameraInfo(game.camera, 32, 32);
+
     }
 };
