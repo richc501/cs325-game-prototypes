@@ -7,8 +7,9 @@ let up;
 let down;
 let right;
 let left;
-var facing = 'idle_right';
-var jumpTimer = 0;
+let facing = 'idle_right';
+let wallJumpTimerLeft = 0;
+let wallJumpTimerRight = 0;
 let onWall = false;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
@@ -117,7 +118,6 @@ window.onload = function() {
         		facing = 'jump_idle';
         		chicken_sprite.frame = 16;
         	}
-            jumpTimer = game.time.now + 750;
         } else if(chicken_sprite.body.onFloor() && (facing == 'jump_right' || facing == 'jump_left' || facing == 'jump_idle')) {
 			facing = 'idle'
 			chicken_sprite.animations.play('idle');
@@ -125,16 +125,20 @@ window.onload = function() {
         if(up.isDown && onWall && !chicken_sprite.body.onFloor())
         {
         	if(chicken_sprite.body.blocked.right) {
-        		facing = 'jump_left';
+        		facing = 'wall_jump_left';
         		chicken_sprite.animations.play('left');
         		chicken_sprite.body.velocity.y = -300;
         		chicken_sprite.body.velocity.x = -100;
+        		if(right.isDown)
+        			chicken_sprite.body.velocity.x = 100;
         	}
         	if(chicken_sprite.body.blocked.left) {
-        		facing = 'jump_right';
+        		facing = 'wall_jump_right';
         		chicken_sprite.animations.play('right');
         		chicken_sprite.body.velocity.y = -300;
         		chicken_sprite.body.velocity.x = 100;
+        		if(left.isDown)
+        			chicken_sprite.body.velocity.x = -100;
         	}
         }
     }
