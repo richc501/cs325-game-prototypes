@@ -11,6 +11,7 @@ let facing = 'idle_right';
 let wallJumpTimerLeft = 0;
 let wallJumpTimerRight = 0;
 let onWall = false;
+let health;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
     // You will need to change the fourth parameter to "new Phaser.Game()" from
@@ -27,10 +28,12 @@ window.onload = function() {
     	game.load.spritesheet('chicken','assets/chicken_sprite_sheet.png', 16, 16);//https://opengameart.org/content/solarus-chicken
     	game.load.tilemap('map', 'assets/chickenParkour2.json', null, Phaser.Tilemap.TILED_JSON);
     	game.load.image('tiles', 'assets/ground64.png');
+    	game.load.image('full_Health','assets/Hearts_5.png');
     }
     
     function create() {
     	game.physics.startSystem(Phaser.Physics.ARCADE);
+    	game.physics.arcade.checkCollision.down = false;//http://thoughts.amphibian.com/2016/01/falling-down-disable-some-phaser-world.html
         game.physics.restitution = 0.2;
         game.physics.arcade.gravity.y = 300;
     	game.stage.backgroundColor = "#a9f0ff";
@@ -48,6 +51,8 @@ window.onload = function() {
     	
     	
     	chicken_sprite.body.collideWorldBounds = true;
+    	chicken_sprite.checkWorldBounds = true;
+    	chicken_sprite.events.onOutOfBounds.add(respawn, this);
     	chicken_sprite.animations.add('idle', [12,13], 4, true);
     	chicken_sprite.animations.add('right', [2,3,4,5], 7, true);
     	chicken_sprite.animations.add('left', [11,10,9,8], 7, true);
@@ -62,9 +67,13 @@ window.onload = function() {
     	left = game.input.keyboard.addKey(Phaser.Keyboard.A);
     	right = game.input.keyboard.addKey(Phaser.Keyboard.D);
     	
-    	
+    	health = game.add.image(0,0,'full_Health');
+    	health.fixedToCamera = true;
+    	health.cameraOffset.setTo(0, 0);
     }
-    
+    function respawn(sprite) {
+    	sprite.reset(0,game.world.centerY);
+    }
     function update() { //https://phaser.io/examples/v2/arcade-physics/platformer-basics
     	game.physics.arcade.collide(chicken_sprite, groundLayer, function(chicken_sprite, groundLayer) {//http://www.emanueleferonato.com/2017/06/16/the-basics-behind-wall-jump-in-platform-games-html5-prototype-made-with-phaser-and-arcade-physics/
     		if(chicken_sprite.body.blocked.down && !chicken_sprite.body.blocked.right && !chicken_sprite.body.blocked.left) {
@@ -122,7 +131,7 @@ window.onload = function() {
 			facing = 'idle'
 			chicken_sprite.animations.play('idle');
         }
-        if(up.isDown && onWall && !chicken_sprite.body.onFloor())
+        if(up.isDown && onWall)// && !chicken_sprite.body.onFloor())
         {
         	if(chicken_sprite.body.blocked.right) {
         		facing = 'wall_jump_left';
@@ -130,7 +139,14 @@ window.onload = function() {
         		chicken_sprite.body.velocity.y = -300;
         		chicken_sprite.body.velocity.x = -100;
         		if(right.isDown)
+        		{
         			chicken_sprite.body.velocity.x = 100;
+        			if(chicken_sprite.body.blocked.up)
+        			{
+                		chicken_sprite.body.velocity.y = 0;
+                		chicken_sprite.body.velocity.x = 0;
+        			}
+        		}
         	}
         	if(chicken_sprite.body.blocked.left) {
         		facing = 'wall_jump_right';
@@ -138,7 +154,14 @@ window.onload = function() {
         		chicken_sprite.body.velocity.y = -300;
         		chicken_sprite.body.velocity.x = 100;
         		if(left.isDown)
+        		{
         			chicken_sprite.body.velocity.x = -100;
+        			if(chicken_sprite.body.blocked.up)
+        			{
+                		chicken_sprite.body.velocity.y = 0;
+                		chicken_sprite.body.velocity.x = 0;
+        			}
+        		}
         	}
         }
     }
