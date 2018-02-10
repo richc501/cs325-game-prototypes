@@ -2,6 +2,8 @@
 let map;
 let groundLayer;
 let backgroundLayer;
+let waterLayer;
+let caveLayer;
 let chicken_sprite;
 let up;
 let down;
@@ -11,7 +13,11 @@ let facing = 'idle_right';
 let wallJumpTimerLeft = 0;
 let wallJumpTimerRight = 0;
 let onWall = false;
-let health;
+let health = 10;
+let healthBar;
+let lives = 3;
+let lifeBar;
+let stateText;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
     // You will need to change the fourth parameter to "new Phaser.Game()" from
@@ -28,7 +34,9 @@ window.onload = function() {
     	game.load.spritesheet('chicken','assets/chicken_sprite_sheet.png', 16, 16);//https://opengameart.org/content/solarus-chicken
     	game.load.tilemap('map', 'assets/chickenParkour2.json', null, Phaser.Tilemap.TILED_JSON);
     	game.load.image('tiles', 'assets/ground64.png');
-    	game.load.image('full_Health','assets/Hearts_5.png');
+    	game.load.image('heart_left', 'assets/hearts/Hearts_left.png');
+    	game.load.image('heart_right', 'assets/hearts/Hearts_right.png');
+    	game.load.image('Lives', 'assets/lives/chicken_lives.png');
     }
     
     function create() {
@@ -42,6 +50,8 @@ window.onload = function() {
     	
     	groundLayer = map.createLayer('GroundLayer');
     	backgroundLayer = map.createLayer('BackGroundLayer');
+    	caveLayer = map.createLayer('CaveBackGroundLayer');
+    	waterLayer = map.createLayer('WaterLayer');
     	groundLayer.resizeWorld();
     	map.setCollisionBetween(0,7, true, 'GroundLayer')
     	
@@ -67,14 +77,68 @@ window.onload = function() {
     	left = game.input.keyboard.addKey(Phaser.Keyboard.A);
     	right = game.input.keyboard.addKey(Phaser.Keyboard.D);
     	
-    	health = game.add.image(0,0,'full_Health');
-    	health.fixedToCamera = true;
-    	health.cameraOffset.setTo(0, 0);
+    	healthBar = game.add.group();
+    	lifeBar = game.add.group();
+    	for(let i = 0; i < 10; i++)
+    	{
+    		let hearts;
+    		if(i==0||i%2==0)
+    			hearts = healthBar.create(665+(14*i),20,'heart_left');
+    		else
+    			hearts = healthBar.create(665+(14*i),20,'heart_right');
+    		hearts.fixedToCamera = true;//https://phaser.io/examples/v2/camera/fixed-to-camera
+    		hearts.cameraOffset.setTo(665+(14*i), 20);
+    		hearts.anchor.setTo(0.5, 0.5);
+    	}
+        for (let i = 0; i < 3; i++) //https://phaser.io/examples/v2/games/invaders
+        {
+            let chicken = lifeBar.create(750 + (16 * i), 50, 'Lives');
+            chicken.fixedToCamera = true;//https://phaser.io/examples/v2/camera/fixed-to-camera
+            chicken.cameraOffset.setTo(750 + (16 * i), 50);
+            chicken.anchor.setTo(0.5, 0.5);
+        }
+        //  Text
+        stateText = game.add.text(400,300,'', { font: '84px Comic Sans MS', fill: '#fff' });//https://phaser.io/examples/v2/games/invaders
+        stateText.anchor.setTo(0.5, 0.5);
+        stateText.fixedToCamera = true;//https://phaser.io/examples/v2/camera/fixed-to-camera
+        stateText.cameraOffset.setTo(400,300,game.world.centerY, 20);
+        stateText.visible = false;
     }
     function respawn(sprite) {
-    	sprite.reset(0,game.world.centerY);
+    	lives--;
+    	let life = lifeBar.getFirstAlive();
+    	if(life)
+    		life.kill();
+        // When the player dies
+        if (lives < 0)
+        {
+        	sprite.kill();
+            
+            stateText.text=" GAME OVER \n Click to restart";
+            stateText.visible = true;
+
+            //the "click to restart" handler
+            game.input.onTap.addOnce(restart,this);
+        } else {
+        	sprite.reset(0,game.world.centerY);
+        }
+    }
+    function restart () {
+
+        //  A new level starts
+        
+        //resets the life count
+        lifeBar.callAll('revive');
+
+        //revives the player
+        chicken_sprite.revive();
+        chicken_sprite.reset(0,game.world.centerY);
+        //hides the text
+        stateText.visible = false;
+
     }
     function update() { //https://phaser.io/examples/v2/arcade-physics/platformer-basics
+
     	game.physics.arcade.collide(chicken_sprite, groundLayer, function(chicken_sprite, groundLayer) {//http://www.emanueleferonato.com/2017/06/16/the-basics-behind-wall-jump-in-platform-games-html5-prototype-made-with-phaser-and-arcade-physics/
     		if(chicken_sprite.body.blocked.down && !chicken_sprite.body.blocked.right && !chicken_sprite.body.blocked.left) {
     			onWall = false;
