@@ -21,6 +21,9 @@ let stateText;
 let explosions;
 let cleavers;
 let cleaverTime=0;
+let cleaverOnGroundTimer;
+let gameStart = false;
+let logo;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
     // You will need to change the fourth parameter to "new Phaser.Game()" from
@@ -43,6 +46,7 @@ window.onload = function() {
     	game.load.image('Lives', 'assets/lives/chicken_lives.png');
     	game.load.spritesheet('kaboom', 'assets/weapon/explode.png', 128, 128);
     	game.load.image('cleaver', 'assets/weapon/cleaver.png');
+    	game.load.image('logo', 'assets/logo.png');
     }
     
     function create() {
@@ -120,10 +124,18 @@ window.onload = function() {
         stateText.cameraOffset.setTo(400,300,game.world.centerY, 20);
         stateText.visible = false;
         
-
-        
         chicken_sprite.body.onCollide = new Phaser.Signal();
         chicken_sprite.body.onCollide.add(cleaverHitsChicken, this);
+        
+        logo = game.add.sprite(400, 300, 'logo');
+        logo.anchor.setTo(0.5, 0.5);
+        logo.fixedToCamera = true;
+        game.input.onDown.add(removeLogo, this);
+    }
+    function removeLogo() {
+        game.input.onDown.remove(removeLogo, this);
+        logo.kill();
+        gameStart = true;
     }
     function cleaverHitsChicken(cleavers, chicken_sprite) {
 		health--;
@@ -137,7 +149,7 @@ window.onload = function() {
         }
     }
     function throwCleaver() {//https://phaser.io/examples/v2/games/invaders
-    	if(game.time.now > cleaverTime)
+    	if(game.time.now > cleaverTime && gameStart == true)
     	{
     		let blade = cleavers.getFirstExists(false);
     		if(blade)
@@ -159,13 +171,13 @@ window.onload = function() {
     		life.kill();
         // When the player dies
         if (lives < 1)
-        {
+        {	
         	sprite.kill();
             game.camera.y = 350;
             game.camera.x = 0;
             stateText.text=" GAME OVER \n Click to restart";
             stateText.visible = true;
-
+            
             //the "click to restart" handler
             game.input.onTap.addOnce(restart,this);
         } else {
@@ -177,7 +189,6 @@ window.onload = function() {
         }
     }
     function restart () {
-
         //  A new level starts
     	health = 10;
         lives = 3;
@@ -214,6 +225,7 @@ window.onload = function() {
     		cleavers.body.velocity.x = 0;
     		cleavers.body.velocity.y = 0;
     	});
+    	game.physics.arcade.collide(cleavers, cleavers);
         if (game.time.now > cleaverTime)
         {
         	throwCleaver();
@@ -272,7 +284,7 @@ window.onload = function() {
         		chicken_sprite.body.velocity.x = -100;
         		if(right.isDown)
         		{
-        			chicken_sprite.body.velocity.x = 100;
+        			chicken_sprite.body.velocity.x = 100;//change animation here
         			if(chicken_sprite.body.blocked.up)
         			{
                 		chicken_sprite.body.velocity.y = 0;
@@ -287,7 +299,7 @@ window.onload = function() {
         		chicken_sprite.body.velocity.x = 100;
         		if(left.isDown)
         		{
-        			chicken_sprite.body.velocity.x = -100;
+        			chicken_sprite.body.velocity.x = -100;//change animation here
         			if(chicken_sprite.body.blocked.up)
         			{
                 		chicken_sprite.body.velocity.y = 0;
