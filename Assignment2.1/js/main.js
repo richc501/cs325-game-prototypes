@@ -298,8 +298,8 @@ window.onload = function() {
         }
     }
     function render() {
-
-        game.debug.cameraInfo(game.camera, 32, 32);
+    	game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 32);
+        //game.debug.cameraInfo(game.camera, 32, 32);
 
     }
 };
