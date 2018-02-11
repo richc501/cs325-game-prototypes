@@ -173,7 +173,7 @@ window.onload = function() {
             game.camera.x = 0;
             health = 10;
             healthBar.callAll('revive');
-        	sprite.reset(0,game.world.centerY);
+            chicken_sprite.reset(0,game.world.centerY);
         }
     }
     function restart () {
