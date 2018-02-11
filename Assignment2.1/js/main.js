@@ -64,7 +64,7 @@ window.onload = function() {
     	cleavers = game.add.group();
     	cleavers.enableBody = true;
     	cleavers.physicsBodyType = Phaser.Physics.ARCADE;
-    	cleavers.createMultiple(100, 'cleaver');
+    	cleavers.createMultiple(300, 'cleaver');
     	cleavers.setAll('anchor.x', 0.5);
     	cleavers.setAll('anchor.y', 1);
     	cleavers.setAll('outOfBoundsKill', true);
