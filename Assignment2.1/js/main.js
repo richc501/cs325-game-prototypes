@@ -126,7 +126,6 @@ window.onload = function() {
         chicken_sprite.body.onCollide.add(cleaverHitsChicken, this);
     }
     function cleaverHitsChicken(cleavers, chicken_sprite) {
-    	cleavers.kill
 		health--;
     	let lifeHearts = healthBar.getFirstAlive();
     	if(lifeHearts)
@@ -185,6 +184,7 @@ window.onload = function() {
         //resets the life count
         lifeBar.callAll('revive');
         healthBar.callAll('revive');
+        cleavers.callAll('kill');
         //revives the player
         chicken_sprite.revive();
         chicken_sprite.reset(0,game.world.centerY);
@@ -263,7 +263,7 @@ window.onload = function() {
 			facing = 'idle'
 			chicken_sprite.animations.play('idle');
         }
-        if(up.isDown && onWall)// && !chicken_sprite.body.onFloor())
+        if(up.isDown && onWall)
         {
         	if(chicken_sprite.body.blocked.right) {
         		facing = 'wall_jump_left';
