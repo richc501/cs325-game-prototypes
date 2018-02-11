@@ -4,6 +4,7 @@ let groundLayer;
 let backgroundLayer;
 let waterLayer;
 let caveLayer;
+let finishLayer;
 let chicken_sprite;
 let up;
 let down;
@@ -21,9 +22,10 @@ let stateText;
 let explosions;
 let cleavers;
 let cleaverTime=0;
-let cleaverOnGroundTimer;
+let cleaverDespawn=400;
 let gameStart = false;
 let logo;
+let door;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
     // You will need to change the fourth parameter to "new Phaser.Game()" from
@@ -47,6 +49,7 @@ window.onload = function() {
     	game.load.spritesheet('kaboom', 'assets/weapon/explode.png', 128, 128);
     	game.load.image('cleaver', 'assets/weapon/cleaver.png');
     	game.load.image('logo', 'assets/logo.png');
+    	game.load.image('finish', 'assets/door.png');
     }
     
     function create() {
@@ -62,6 +65,7 @@ window.onload = function() {
     	backgroundLayer = map.createLayer('BackGroundLayer');
     	caveLayer = map.createLayer('CaveBackGroundLayer');
     	waterLayer = map.createLayer('WaterLayer');
+    	finishLayer = map.createLayer('FinishLayer');
     	groundLayer.resizeWorld();
     	map.setCollisionBetween(0,7, true, 'GroundLayer')
     	
@@ -74,6 +78,9 @@ window.onload = function() {
     	cleavers.setAll('outOfBoundsKill', true);
     	cleavers.setAll('checkWorldBounds', true);
         
+    	door = game.add.sprite(6208,832, 'finish');
+    	game.physics.enable(door, Phaser.Physics.ARCADE)
+    	
     	chicken_sprite = game.add.sprite(0,game.world.centerY, 'chicken');
     	game.physics.enable(chicken_sprite, Phaser.Physics.ARCADE);
     	
@@ -126,13 +133,14 @@ window.onload = function() {
         
         chicken_sprite.body.onCollide = new Phaser.Signal();
         chicken_sprite.body.onCollide.add(cleaverHitsChicken, this);
+        //chicken_sprite.body.onCollide.add(finishChecker, this);
         
-        logo = game.add.sprite(400, 300, 'logo');
+        logo = game.add.sprite(400, 300, 'logo');//https://phaser.io/examples/v2/games/tanks
         logo.anchor.setTo(0.5, 0.5);
         logo.fixedToCamera = true;
         game.input.onDown.add(removeLogo, this);
     }
-    function removeLogo() {
+    function removeLogo() {//https://phaser.io/examples/v2/games/tanks
         game.input.onDown.remove(removeLogo, this);
         logo.kill();
         gameStart = true;
@@ -164,6 +172,17 @@ window.onload = function() {
     		}
     	}
     }
+    function killCleaver() {
+    	let deadBlade = cleavers.getFirstAlive();
+    	if(deadBlade)
+    	{
+    		if(deadBlade.body.onFloor())
+    		{
+    			deadBlade.kill();
+    			cleaverDespawn = game.time.now + 400;
+    		}
+    	}
+    }
     function respawn(sprite) {
     	lives--;
     	let life = lifeBar.getFirstAlive();
@@ -172,7 +191,7 @@ window.onload = function() {
         // When the player dies
         if (lives < 1)
         {	
-        	sprite.kill();
+        	chicken_sprite.kill();
             game.camera.y = 350;
             game.camera.x = 0;
             stateText.text=" GAME OVER \n Click to restart";
@@ -185,10 +204,11 @@ window.onload = function() {
             game.camera.x = 0;
             health = 10;
             healthBar.callAll('revive');
+            cleavers.callAll('kill');
             chicken_sprite.reset(0,game.world.centerY);
         }
     }
-    function restart () {
+    function restart() {
         //  A new level starts
     	health = 10;
         lives = 3;
@@ -199,12 +219,24 @@ window.onload = function() {
         //revives the player
         chicken_sprite.revive();
         chicken_sprite.reset(0,game.world.centerY);
+        if(game.camera.target == null)
+        	game.camera.follow(chicken_sprite);
         //hides the text
         stateText.visible = false;
 
+    }    
+    function finishChecker(sprite, door) {
+    	game.camera.target = null //http://www.html5gamedevs.com/topic/2860-camera-unfollow/
+    	chicken_sprite.kill();
+        game.camera.y = 350;
+        game.camera.x = 0;
+        stateText.text=" YOU WON! \n Click to restart";
+        stateText.visible = true;
+        game.input.onTap.addOnce(restart,this);
     }
     function update() { //https://phaser.io/examples/v2/arcade-physics/platformer-basics
-
+    	game.physics.arcade.overlap(chicken_sprite, door, finishChecker, null, this);
+    	game.physics.arcade.collide(door, groundLayer);
     	game.physics.arcade.collide(chicken_sprite, groundLayer, function(chicken_sprite, groundLayer) {//http://www.emanueleferonato.com/2017/06/16/the-basics-behind-wall-jump-in-platform-games-html5-prototype-made-with-phaser-and-arcade-physics/
     		if(chicken_sprite.body.blocked.down && !chicken_sprite.body.blocked.right && !chicken_sprite.body.blocked.left) {
     			onWall = false;
@@ -229,6 +261,10 @@ window.onload = function() {
         if (game.time.now > cleaverTime)
         {
         	throwCleaver();
+        }
+        if(game.time.now > cleaverDespawn)
+        {
+        	killCleaver();
         }
     	if(left.isDown && !onWall) {
     		chicken_sprite.body.velocity.x = -150;
@@ -284,7 +320,10 @@ window.onload = function() {
         		chicken_sprite.body.velocity.x = -100;
         		if(right.isDown)
         		{
+        			facing = 'wall_jump_right';
+        			chicken_sprite.animations.play('right');
         			chicken_sprite.body.velocity.x = 100;//change animation here
+        			
         			if(chicken_sprite.body.blocked.up)
         			{
                 		chicken_sprite.body.velocity.y = 0;
@@ -299,6 +338,8 @@ window.onload = function() {
         		chicken_sprite.body.velocity.x = 100;
         		if(left.isDown)
         		{
+        			facing = 'wall_jump_left';
+        			chicken_sprite.animations.play('left');
         			chicken_sprite.body.velocity.x = -100;//change animation here
         			if(chicken_sprite.body.blocked.up)
         			{
@@ -310,8 +351,9 @@ window.onload = function() {
         }
     }
     function render() {
-    	game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 32);
-        //game.debug.cameraInfo(game.camera, 32, 32);
+    	//game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 32);
+        //game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
+    	game.debug.cameraInfo(game.camera, 32, 32);
 
     }
 };
