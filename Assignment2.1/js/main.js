@@ -210,6 +210,7 @@ window.onload = function() {
     		cleavers.body.velocity.y = 0;
     	});
     	game.physics.arcade.collide(chicken_sprite, cleavers, function(chicken_sprite, cleavers) {
+    		cleavers.kill();
     		cleavers.body.velocity.x = 0;
     		cleavers.body.velocity.y = 0;
     	});
