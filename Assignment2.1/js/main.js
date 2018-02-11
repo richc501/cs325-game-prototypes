@@ -353,7 +353,7 @@ window.onload = function() {
     function render() {
     	//game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 32);
         //game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
-    	game.debug.cameraInfo(game.camera, 32, 32);
+    	//game.debug.cameraInfo(game.camera, 32, 32);
 
     }
 };
