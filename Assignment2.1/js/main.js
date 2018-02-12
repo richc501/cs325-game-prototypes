@@ -29,6 +29,8 @@ let door;
 let themeSong;
 let idleSound;
 let jumpSound;
+let idleSoundTimer=0;
+let jumpSoundTimer=0;
 //let cleaverSpawnSound;
 let cleaverHitSound;
 window.onload = function() {
@@ -313,9 +315,12 @@ window.onload = function() {
     				chicken_sprite.frame = 0;
     				//facing = 'idle_right';
     			}
-    			idleSound.play();
-    			chicken_sprite.animations.play('idle');
     			
+    			if(game.time.now > idleSoundTimer) {
+    			idleSound.play();
+    			idleSoundTimer = game.time.now + 600;
+    			}
+    			chicken_sprite.animations.play('idle');
     		}
     	}
         if (up.isDown && chicken_sprite.body.onFloor() && !onWall)
@@ -334,7 +339,10 @@ window.onload = function() {
         	}
         } else if(chicken_sprite.body.onFloor() && (facing == 'jump_right' || facing == 'jump_left' || facing == 'jump_idle')) {
 			facing = 'idle'
-			idleSound.play();
+    		if(game.time.now > idleSoundTimer) {
+        		idleSound.play();
+        		idleSoundTimer = game.time.now + 600;
+    		}
 			chicken_sprite.animations.play('idle');
         }
         if(up.isDown && onWall)
@@ -356,8 +364,11 @@ window.onload = function() {
                 		chicken_sprite.body.velocity.x = 0;
         			}
         		}
+        	if(game.time.now > jumpSoundTimer) {
         		jumpSound.play();
+        		jumpSoundTimer = game.time.now + 150;
         	}
+        }
         	if(chicken_sprite.body.blocked.left) {
         		facing = 'wall_jump_right';
         		chicken_sprite.animations.play('right');
@@ -374,7 +385,10 @@ window.onload = function() {
                 		chicken_sprite.body.velocity.x = 0;
         			}
         		}
-        		jumpSound.play();
+            	if(game.time.now > jumpSoundTimer) {
+            		jumpSound.play();
+            		jumpSoundTimer = game.time.now + 150;
+            	}
         	}
         }
     }
