@@ -1,0 +1,119 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="371516__mrthenoronha__space-game-theme-loop_data" version="1.3.0" audacityversion="2.2.1" sel0="15.9021036624" sel1="15.9021036624" vpos="0" h="0.0000000000" zoom="54.8355122388" rate="44100.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags>
+		<tag name="Software" value="FL Studio 12"/>
+	</tags>
+	<wavetrack name="371516__mrthenoronha__space-game-theme-loop" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="0.015849" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="1615685">
+				<waveblock start="0">
+					<simpleblockfile filename="e000051f.au" len="262144" min="-0.70816" max="0.778412" rms="0.192208"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="e0000e25.au" len="262144" min="-0.81723" max="0.734558" rms="0.191196"/>
+				</waveblock>
+				<waveblock start="524288">
+					<simpleblockfile filename="e0000e1f.au" len="262144" min="-0.83548" max="0.787415" rms="0.197687"/>
+				</waveblock>
+				<waveblock start="786432">
+					<simpleblockfile filename="e0000f22.au" len="262144" min="-0.750641" max="0.816284" rms="0.187796"/>
+				</waveblock>
+				<waveblock start="1048576">
+					<simpleblockfile filename="e00001f2.au" len="262144" min="-0.937347" max="0.825043" rms="0.200922"/>
+				</waveblock>
+				<waveblock start="1310720">
+					<simpleblockfile filename="e0000b8a.au" len="152482" min="-0.662567" max="0.697205" rms="0.183185"/>
+				</waveblock>
+				<waveblock start="1463202">
+					<simpleblockfile filename="e0000568.au" len="152483" min="-0.671997" max="0.627686" rms="0.1739"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="371516__mrthenoronha__space-game-theme-loop" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="0.015849" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="1615685">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000ba6.au" len="262144" min="-0.733643" max="0.713776" rms="0.182624"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="e00008b1.au" len="262144" min="-0.971924" max="0.760956" rms="0.188365"/>
+				</waveblock>
+				<waveblock start="524288">
+					<simpleblockfile filename="e0000512.au" len="262144" min="-0.856049" max="0.818237" rms="0.194242"/>
+				</waveblock>
+				<waveblock start="786432">
+					<simpleblockfile filename="e0000e5e.au" len="262144" min="-0.721252" max="0.859955" rms="0.179161"/>
+				</waveblock>
+				<waveblock start="1048576">
+					<simpleblockfile filename="e0000eb7.au" len="262144" min="-0.968658" max="0.773407" rms="0.203346"/>
+				</waveblock>
+				<waveblock start="1310720">
+					<simpleblockfile filename="e000015c.au" len="152482" min="-0.818939" max="0.773407" rms="0.181398"/>
+				</waveblock>
+				<waveblock start="1463202">
+					<simpleblockfile filename="e00006eb.au" len="152483" min="-0.61618" max="0.65979" rms="0.168152"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="370294__mrthenoronha__tribal-game-theme-loop" channel="0" linked="1" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="0.015849" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="1613042">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000ec3.au" len="262144" min="-0.969971" max="0.777344" rms="0.245403"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="e00008c3.au" len="262144" min="-0.969971" max="0.792206" rms="0.240746"/>
+				</waveblock>
+				<waveblock start="524288">
+					<simpleblockfile filename="e0000f9b.au" len="262144" min="-0.969971" max="0.781982" rms="0.264422"/>
+				</waveblock>
+				<waveblock start="786432">
+					<simpleblockfile filename="e0000fbd.au" len="206652" min="-0.969971" max="0.746338" rms="0.239679"/>
+				</waveblock>
+				<waveblock start="993084">
+					<simpleblockfile filename="e0000f8e.au" len="206653" min="-0.969971" max="0.777344" rms="0.235817"/>
+				</waveblock>
+				<waveblock start="1199737">
+					<simpleblockfile filename="e00004ee.au" len="206652" min="-0.969971" max="0.792206" rms="0.240772"/>
+				</waveblock>
+				<waveblock start="1406389">
+					<simpleblockfile filename="e000034d.au" len="206653" min="-0.969971" max="0.781982" rms="0.278689"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+	<wavetrack name="370294__mrthenoronha__tribal-game-theme-loop" channel="1" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="0" rate="44100" gain="0.015849" pan="0.0" colorindex="0">
+		<waveclip offset="0.00000000" colorindex="0">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="1613042">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000743.au" len="262144" min="-0.827423" max="0.802673" rms="0.249182"/>
+				</waveblock>
+				<waveblock start="262144">
+					<simpleblockfile filename="e0000b28.au" len="262144" min="-0.785828" max="0.80307" rms="0.248357"/>
+				</waveblock>
+				<waveblock start="524288">
+					<simpleblockfile filename="e000066f.au" len="262144" min="-0.807343" max="0.78418" rms="0.263995"/>
+				</waveblock>
+				<waveblock start="786432">
+					<simpleblockfile filename="e0000dd5.au" len="206652" min="-0.827423" max="0.802673" rms="0.24161"/>
+				</waveblock>
+				<waveblock start="993084">
+					<simpleblockfile filename="e00001f4.au" len="206653" min="-0.784576" max="0.80307" rms="0.248591"/>
+				</waveblock>
+				<waveblock start="1199737">
+					<simpleblockfile filename="e0000481.au" len="206652" min="-0.785828" max="0.78418" rms="0.246335"/>
+				</waveblock>
+				<waveblock start="1406389">
+					<simpleblockfile filename="e00009f6.au" len="206653" min="-0.807343" max="0.77655" rms="0.279021"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

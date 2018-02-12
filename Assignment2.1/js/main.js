@@ -26,6 +26,11 @@ let cleaverDespawn=400;
 let gameStart = false;
 let logo;
 let door;
+let themeSong;
+let idleSound;
+let jumpSound;
+//let cleaverSpawnSound;
+let cleaverHitSound;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
     // You will need to change the fourth parameter to "new Phaser.Game()" from
@@ -46,13 +51,24 @@ window.onload = function() {
     	game.load.image('heart_left', 'assets/hearts/Hearts_left.png');
     	game.load.image('heart_right', 'assets/hearts/Hearts_right.png');
     	game.load.image('Lives', 'assets/lives/chicken_lives.png');
-    	game.load.spritesheet('kaboom', 'assets/weapon/explode.png', 128, 128);
+    	game.load.spritesheet('kaboom', 'assets/weapon/explode.png', 128, 128);//https://phaser.io/examples/v2/games/tanks
     	game.load.image('cleaver', 'assets/weapon/cleaver.png');
     	game.load.image('logo', 'assets/logo.png');
     	game.load.image('finish', 'assets/door.png');
+    	//https://phaser.io/examples/v2/audio/sound-complete
+    	game.load.audio('knife_HIT', 'assets/sounds/knife_HIT.mp3');//https://freesound.org/people/Gingie/sounds/181679/
+    	game.load.audio('knife_THROW', 'assets/sounds/knife_THROW.mp3');
+    	game.load.audio('theme_song', 'assets/sounds/theme-loop.mp3');//https://freesound.org/people/Mrthenoronha/sounds/371516/ and https://freesound.org/people/Mrthenoronha/sounds/370294/
+    	game.load.audio('8bitjump', 'assets/sounds/jump.mp3');//https://freesound.org/people/plasterbrain/sounds/399095/
+    	game.load.audio('idle_sound', 'assets/sounds/chicken-idle.mp3')//https://freesound.org/people/Rudmer_Rotteveel/sounds/316920/
     }
     
     function create() {
+    	themeSong = game.add.audio('theme_song');
+    	idleSound = game.add.audio('idle_sound');
+    	jumpSound = game.add.audio('8bitjump');
+    	//cleaverSpawnSound = game.add.audio('knife_THROW');
+    	cleaverHitSound = game.add.audio('knife_HIT');
     	game.physics.startSystem(Phaser.Physics.ARCADE);
     	game.physics.arcade.checkCollision.down = false;//http://thoughts.amphibian.com/2016/01/falling-down-disable-some-phaser-world.html
         game.physics.restitution = 0.2;
@@ -139,11 +155,15 @@ window.onload = function() {
         logo.anchor.setTo(0.5, 0.5);
         logo.fixedToCamera = true;
         game.input.onDown.add(removeLogo, this);
+        game.sound.setDecodedCallback(themeSong, start, this);//https://phaser.io/examples/v2/audio/loop
     }
     function removeLogo() {//https://phaser.io/examples/v2/games/tanks
         game.input.onDown.remove(removeLogo, this);
         logo.kill();
         gameStart = true;
+    }
+    function start() {
+    	themeSong.loopFull(0.6);
     }
     function cleaverHitsChicken(cleavers, chicken_sprite) {
 		health--;
@@ -164,11 +184,11 @@ window.onload = function() {
     		{
     			let randomX=game.rnd.integerInRange(0,game.world.width);
     			//let randomY=game.rnd.integerInRange(0,game.world.height);
-    			
+    			//cleaverSpawnSound.play();
     			blade.reset(randomX, 0);
-    			//blade.body.velocity.y = 200+game.rnd.integerInRange(0,500);
+    			
     			game.physics.arcade.moveToObject(blade,chicken_sprite,120);
-    			cleaverTime = game.time.now + 200;
+    			cleaverTime = game.time.now + 400;
     		}
     	}
     }
@@ -249,11 +269,13 @@ window.onload = function() {
     		}
     	});
     	game.physics.arcade.collide(cleavers, groundLayer, function(cleavers, groundLayer) {
+    		//cleaverHitSound.play();
     		cleavers.body.velocity.x = 0;
     		cleavers.body.velocity.y = 0;
     	});
     	game.physics.arcade.collide(chicken_sprite, cleavers, function(chicken_sprite, cleavers) {
     		cleavers.kill();
+    		cleaverHitSound.play();
     		cleavers.body.velocity.x = 0;
     		cleavers.body.velocity.y = 0;
     	});
@@ -291,11 +313,14 @@ window.onload = function() {
     				chicken_sprite.frame = 0;
     				//facing = 'idle_right';
     			}
+    			idleSound.play();
     			chicken_sprite.animations.play('idle');
+    			
     		}
     	}
         if (up.isDown && chicken_sprite.body.onFloor() && !onWall)
         {
+        	jumpSound.play();
         	chicken_sprite.animations.stop();
         	
         	chicken_sprite.body.velocity.y = -300;
@@ -309,6 +334,7 @@ window.onload = function() {
         	}
         } else if(chicken_sprite.body.onFloor() && (facing == 'jump_right' || facing == 'jump_left' || facing == 'jump_idle')) {
 			facing = 'idle'
+			idleSound.play();
 			chicken_sprite.animations.play('idle');
         }
         if(up.isDown && onWall)
@@ -330,6 +356,7 @@ window.onload = function() {
                 		chicken_sprite.body.velocity.x = 0;
         			}
         		}
+        		jumpSound.play();
         	}
         	if(chicken_sprite.body.blocked.left) {
         		facing = 'wall_jump_right';
@@ -347,12 +374,13 @@ window.onload = function() {
                 		chicken_sprite.body.velocity.x = 0;
         			}
         		}
+        		jumpSound.play();
         	}
         }
     }
     function render() {
     	//game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 32);
-        //game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
+        game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
     	//game.debug.cameraInfo(game.camera, 32, 32);
 
     }
