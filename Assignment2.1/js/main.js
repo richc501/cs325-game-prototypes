@@ -33,6 +33,8 @@ let idleSoundTimer=0;
 let jumpSoundTimer=0;
 //let cleaverSpawnSound;
 let cleaverHitSound;
+let donzenEggs;
+let eggsCollected = 0;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
     // You will need to change the fourth parameter to "new Phaser.Game()" from
@@ -57,6 +59,7 @@ window.onload = function() {
     	game.load.image('cleaver', 'assets/weapon/cleaver.png');
     	game.load.image('logo', 'assets/logo.png');
     	game.load.image('finish', 'assets/door.png');
+    	game.load.image('egg', 'assets/egg.png');
     	//https://phaser.io/examples/v2/audio/sound-complete
     	game.load.audio('knife_HIT', 'assets/sounds/knife_HIT.mp3');//https://freesound.org/people/Gingie/sounds/181679/
     	game.load.audio('knife_THROW', 'assets/sounds/knife_THROW.mp3');
@@ -96,7 +99,17 @@ window.onload = function() {
     	cleavers.setAll('outOfBoundsKill', true);
     	cleavers.setAll('checkWorldBounds', true);
         
+    	donzenEggs = game.add.group();
+    	donzenEggs.enableBody = true;
+    	donzenEggs.physicsBodyType = Phaser.Physics.ARCADE;
+    	donzenEggs.createMultiple(12, 'egg');
+    	donzenEggs.setAll('anchor.x', 0.5);
+    	donzenEggs.setAll('anchor.y', 0.5);
+    	donzenEggs.setAll('outOfBoundsKill', true);
+    	donzenEggs.setAll('checkWorldBounds', true);
+    	spawnEggs();
     	door = game.add.sprite(6208,832, 'finish');
+    	
     	game.physics.enable(door, Phaser.Physics.ARCADE)
     	
     	chicken_sprite = game.add.sprite(0,game.world.centerY, 'chicken');
@@ -149,10 +162,6 @@ window.onload = function() {
         stateText.cameraOffset.setTo(400,300,game.world.centerY, 20);
         stateText.visible = false;
         
-        chicken_sprite.body.onCollide = new Phaser.Signal();
-        chicken_sprite.body.onCollide.add(cleaverHitsChicken, this);
-        //chicken_sprite.body.onCollide.add(finishChecker, this);
-        
         logo = game.add.sprite(400, 300, 'logo');//https://phaser.io/examples/v2/games/tanks
         logo.anchor.setTo(0.5, 0.5);
         logo.fixedToCamera = true;
@@ -192,6 +201,16 @@ window.onload = function() {
     			game.physics.arcade.moveToObject(blade,chicken_sprite,120);
     			cleaverTime = game.time.now + 400;
     		}
+    	}
+    }
+    function spawnEggs() {
+    	let x = [86, 3440, 4440, 6300, 3873, 1305, 5600, 4898, 5330, 5720, 670, 1558];
+    	let y = [943, 876, 360, 108, 105, 225, 927, 360, 100, 360, 173, 934]
+    	let egg;
+    	for(let b = 0;b<12;b++)
+    	{
+    		egg = donzenEggs.getFirstExists(false);
+    		egg.reset(x[b],y[b]);
     	}
     }
     function killCleaver() {
@@ -245,7 +264,6 @@ window.onload = function() {
         	game.camera.follow(chicken_sprite);
         //hides the text
         stateText.visible = false;
-
     }    
     function finishChecker(sprite, door) {
     	game.camera.target = null //http://www.html5gamedevs.com/topic/2860-camera-unfollow/
@@ -258,7 +276,10 @@ window.onload = function() {
     }
     function update() { //https://phaser.io/examples/v2/arcade-physics/platformer-basics
     	game.physics.arcade.overlap(chicken_sprite, door, finishChecker, null, this);
+    	
+    	game.physics.arcade.collide(donzenEggs, groundLayer);
     	game.physics.arcade.collide(door, groundLayer);
+
     	game.physics.arcade.collide(chicken_sprite, groundLayer, function(chicken_sprite, groundLayer) {//http://www.emanueleferonato.com/2017/06/16/the-basics-behind-wall-jump-in-platform-games-html5-prototype-made-with-phaser-and-arcade-physics/
     		if(chicken_sprite.body.blocked.down && !chicken_sprite.body.blocked.right && !chicken_sprite.body.blocked.left) {
     			onWall = false;
@@ -278,8 +299,14 @@ window.onload = function() {
     	game.physics.arcade.collide(chicken_sprite, cleavers, function(chicken_sprite, cleavers) {
     		cleavers.kill();
     		cleaverHitSound.play();
+    		cleaverHitsChicken(cleavers, chicken_sprite);
     		cleavers.body.velocity.x = 0;
     		cleavers.body.velocity.y = 0;
+    	});
+    	game.physics.arcade.collide(chicken_sprite, donzenEggs, function(chicken_sprite, donzenEggs){
+        	donzenEggs.kill();
+        	eggsCollected++;
+        	//play pick up sound
     	});
     	game.physics.arcade.collide(cleavers, cleavers);
         if (game.time.now > cleaverTime)
@@ -394,6 +421,7 @@ window.onload = function() {
     }
     function render() {
     	//game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 32);
+    	game.debug.text('Eggs: ' + eggsCollected + ' / ' + donzenEggs.length, 32, 50); //Temporary will add to GUI latter
         //game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
     	//game.debug.cameraInfo(game.camera, 32, 32);
 
