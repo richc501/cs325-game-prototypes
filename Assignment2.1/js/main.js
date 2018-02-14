@@ -25,11 +25,18 @@ let cleaverTime=0;
 let cleaverDespawn=10000;
 let gameStart = false;
 let logo;
+let logo2;
 let door;
 let themeSong;
 let idleSound;
 let jumpSound;
 let eggSound;
+let gameOverSound;
+let gameWonSound;
+let gameOverScreen;
+let gameWonScreen;
+let gameWonBool = false;
+let gameOverBool = false;
 let idleSoundTimer=0;
 let jumpSoundTimer=0;
 //let cleaverSpawnSound;
@@ -58,18 +65,23 @@ window.onload = function() {
     	game.load.image('heart_left', 'assets/hearts/Hearts_left.png');
     	game.load.image('heart_right', 'assets/hearts/Hearts_right.png');
     	game.load.image('Lives', 'assets/lives/chicken_lives.png');
-    	game.load.spritesheet('kaboom', 'assets/weapon/explode.png', 128, 128);//https://phaser.io/examples/v2/games/tanks
     	game.load.image('cleaver', 'assets/weapon/cleaver.png');
-    	game.load.image('logo', 'assets/logo.png');
+    	game.load.image('logo', 'assets/logo_2.png');
+    	game.load.image('logo2', 'assets/logo.png');
     	game.load.image('finish', 'assets/door.png');
     	game.load.image('egg', 'assets/egg.png');
+    	game.load.image('gameOverIMG', 'assets/gameOver.png');
+    	game.load.image('gameWonIMG', 'assets/youWon.png');
+    	game.load.spritesheet('kaboom', 'assets/weapon/explode.png', 128, 128);//https://phaser.io/examples/v2/games/tanks
+
     	//https://phaser.io/examples/v2/audio/sound-complete
     	game.load.audio('knife_HIT', 'assets/sounds/knife_HIT.mp3');//https://freesound.org/people/Gingie/sounds/181679/
-    	//game.load.audio('knife_THROW', 'assets/sounds/knife_THROW.mp3');
     	game.load.audio('theme_song', 'assets/sounds/theme-loop.mp3');//https://freesound.org/people/Mrthenoronha/sounds/371516/ and https://freesound.org/people/Mrthenoronha/sounds/370294/
     	game.load.audio('8bitjump', 'assets/sounds/jump.mp3');//https://freesound.org/people/plasterbrain/sounds/399095/
-    	game.load.audio('idle_sound', 'assets/sounds/chicken-idle.mp3')//https://freesound.org/people/Rudmer_Rotteveel/sounds/316920/
-    	game.load.audio('egg_sound', 'assets/sounds/eggPickUpSound.mp3')//https://freesound.org/people/bradwesson/sounds/135936/
+    	game.load.audio('idle_sound', 'assets/sounds/chicken-idle.mp3');//https://freesound.org/people/Rudmer_Rotteveel/sounds/316920/
+    	game.load.audio('egg_sound', 'assets/sounds/eggPickUpSound.mp3');//https://freesound.org/people/bradwesson/sounds/135936/
+    	game.load.audio('gameOver', 'assets/sounds/game-over2.mp3');//https://freesound.org/people/deleted_user_877451/sounds/76376/
+    	game.load.audio('gameWon', 'assets/sounds/level-complete.mp3');//https://freesound.org/people/jivatma07/sounds/122255/ and https://freesound.org/people/Kastenfrosch/sounds/162473/
     }
     
     function create() {
@@ -77,8 +89,12 @@ window.onload = function() {
     	idleSound = game.add.audio('idle_sound');
     	jumpSound = game.add.audio('8bitjump');
     	eggSound = game.add.audio('egg_sound');
-    	//cleaverSpawnSound = game.add.audio('knife_THROW');
+    	gameOverSound = game.add.audio('gameOver');
+    	gameWonSound = game.add.audio('gameWon');
     	cleaverHitSound = game.add.audio('knife_HIT');
+    	
+
+    	
     	game.physics.startSystem(Phaser.Physics.ARCADE);
     	game.physics.arcade.checkCollision.down = false;//http://thoughts.amphibian.com/2016/01/falling-down-disable-some-phaser-world.html
         game.physics.restitution = 0.2;
@@ -182,6 +198,7 @@ window.onload = function() {
         stateText.cameraOffset.setTo(400,300,game.world.centerY, 20);
         stateText.visible = false;
         
+
         logo = game.add.sprite(400, 300, 'logo');//https://phaser.io/examples/v2/games/tanks
         logo.anchor.setTo(0.5, 0.5);
         logo.fixedToCamera = true;
@@ -191,6 +208,15 @@ window.onload = function() {
     function removeLogo() {//https://phaser.io/examples/v2/games/tanks
         game.input.onDown.remove(removeLogo, this);
         logo.kill();
+        logo2 = game.add.sprite(400,300, 'logo2');
+        logo2.anchor.setTo(0.5, 0.5);
+        logo2.fixedToCamera = true;
+        game.input.onDown.add(removeLogo2, this);
+    }
+    function removeLogo2() {//https://phaser.io/examples/v2/games/tanks
+        game.input.onDown.remove(removeLogo2, this);
+        logo2.kill();
+        
         gameStart = true;
     }
     function start() {
@@ -258,9 +284,11 @@ window.onload = function() {
         	chicken_sprite.kill();
             game.camera.y = 350;
             game.camera.x = 0;
-            stateText.text=" GAME OVER \n Click to restart";
-            stateText.visible = true;
-            
+        	gameOverScreen = game.add.sprite(400,300, 'gameOverIMG');
+        	gameOverScreen.anchor.setTo(0.5, 0.5);
+        	gameOverScreen.fixedToCamera = true;
+        	gameOverBool = true;
+            gameOverSound.play();
             //the "click to restart" handler
             game.input.onTap.addOnce(restart,this);
         } else {
@@ -274,6 +302,10 @@ window.onload = function() {
     }
     function restart() {
         //  A new level starts
+    	if(gameWonBool == true)
+    		gameWonScreen.kill();
+    	if(gameOverBool == true)
+    		gameOverScreen.kill();
     	eggsCollected = 0;
     	health = 10;
         lives = 3;
@@ -293,7 +325,8 @@ window.onload = function() {
         if(game.camera.target == null)
         	game.camera.follow(chicken_sprite);
         //hides the text
-        stateText.visible = false;
+        gameWonBool = false;
+        gameOverBool = false;
     }    
     function finishChecker(sprite, door) {
     	if(eggsCollected==12)
@@ -303,8 +336,11 @@ window.onload = function() {
     		game.camera.y = 350;
     		game.camera.x = 0;
     		gameStart = false;
-    		stateText.text=" YOU WON! \n Click to restart";
-    		stateText.visible = true;
+        	gameWonScreen = game.add.sprite(400,300, 'gameWonIMG');
+        	gameWonScreen.anchor.setTo(0.5, 0.5);
+        	gameWonScreen.fixedToCamera = true;
+        	gameWonSound.play();
+        	gameWonBool = true;
     		game.input.onTap.addOnce(restart,this);
     	}
     }
