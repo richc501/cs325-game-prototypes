@@ -80,7 +80,7 @@ window.onload = function() {
     	game.load.audio('8bitjump', 'assets/sounds/jump.mp3');//https://freesound.org/people/plasterbrain/sounds/399095/
     	game.load.audio('idle_sound', 'assets/sounds/chicken-idle.mp3');//https://freesound.org/people/Rudmer_Rotteveel/sounds/316920/
     	game.load.audio('egg_sound', 'assets/sounds/eggPickUpSound.mp3');//https://freesound.org/people/bradwesson/sounds/135936/
-    	//game.load.audio('gameOver', 'assets/sounds/game-over2.mp3');//https://freesound.org/people/deleted_user_877451/sounds/76376/
+    	game.load.audio('gameOver', 'assets/sounds/game-over2.mp3');//https://freesound.org/people/deleted_user_877451/sounds/76376/
     	game.load.audio('gameWon', 'assets/sounds/level-complete.mp3');//https://freesound.org/people/jivatma07/sounds/122255/ and https://freesound.org/people/Kastenfrosch/sounds/162473/
     }
     
@@ -89,7 +89,7 @@ window.onload = function() {
     	idleSound = game.add.audio('idle_sound');
     	jumpSound = game.add.audio('8bitjump');
     	eggSound = game.add.audio('egg_sound');
-    	//gameOverSound = game.add.audio('gameOver');
+    	gameOverSound = game.add.audio('gameOver');
     	gameWonSound = game.add.audio('gameWon');
     	cleaverHitSound = game.add.audio('knife_HIT');
     	
@@ -288,7 +288,7 @@ window.onload = function() {
         	gameOverScreen.anchor.setTo(0.5, 0.5);
         	gameOverScreen.fixedToCamera = true;
         	gameOverBool = true;
-            //gameOverSound.play();
+            gameOverSound.play();
             //the "click to restart" handler
             game.input.onTap.addOnce(restart,this);
         } else {
