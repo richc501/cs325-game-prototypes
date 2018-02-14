@@ -22,18 +22,21 @@ let stateText;
 let explosions;
 let cleavers;
 let cleaverTime=0;
-let cleaverDespawn=400;
+let cleaverDespawn=10000;
 let gameStart = false;
 let logo;
 let door;
 let themeSong;
 let idleSound;
 let jumpSound;
+let eggSound;
 let idleSoundTimer=0;
 let jumpSoundTimer=0;
 //let cleaverSpawnSound;
 let cleaverHitSound;
 let donzenEggs;
+let donzenEggs_Alpha;
+let donzenEggs_UI;
 let eggsCollected = 0;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
@@ -62,16 +65,18 @@ window.onload = function() {
     	game.load.image('egg', 'assets/egg.png');
     	//https://phaser.io/examples/v2/audio/sound-complete
     	game.load.audio('knife_HIT', 'assets/sounds/knife_HIT.mp3');//https://freesound.org/people/Gingie/sounds/181679/
-    	game.load.audio('knife_THROW', 'assets/sounds/knife_THROW.mp3');
+    	//game.load.audio('knife_THROW', 'assets/sounds/knife_THROW.mp3');
     	game.load.audio('theme_song', 'assets/sounds/theme-loop.mp3');//https://freesound.org/people/Mrthenoronha/sounds/371516/ and https://freesound.org/people/Mrthenoronha/sounds/370294/
     	game.load.audio('8bitjump', 'assets/sounds/jump.mp3');//https://freesound.org/people/plasterbrain/sounds/399095/
     	game.load.audio('idle_sound', 'assets/sounds/chicken-idle.mp3')//https://freesound.org/people/Rudmer_Rotteveel/sounds/316920/
+    	game.load.audio('egg_sound', 'assets/sounds/eggPickUpSound.mp3')//https://freesound.org/people/bradwesson/sounds/135936/
     }
     
     function create() {
     	themeSong = game.add.audio('theme_song');
     	idleSound = game.add.audio('idle_sound');
     	jumpSound = game.add.audio('8bitjump');
+    	eggSound = game.add.audio('egg_sound');
     	//cleaverSpawnSound = game.add.audio('knife_THROW');
     	cleaverHitSound = game.add.audio('knife_HIT');
     	game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -137,6 +142,7 @@ window.onload = function() {
     	
     	healthBar = game.add.group();
     	lifeBar = game.add.group();
+    	donzenEggs_Alpha = game.add.group();
     	for(let i = 0; i < 10; i++)
     	{
     		let hearts;
@@ -155,6 +161,20 @@ window.onload = function() {
             chicken.cameraOffset.setTo(750 + (16 * i), 50);
             chicken.anchor.setTo(0.5, 0.5);
         }
+        let egg_Alpha;
+        for(let i = 0; i < 12; i++)
+        {
+        	egg_Alpha = donzenEggs_Alpha.create(25+(16 * i),10, 'egg');
+        	egg_Alpha.fixedToCamera = true;//https://phaser.io/examples/v2/camera/fixed-to-camera
+        	egg_Alpha.cameraOffset.setTo(25+(16 * i),10);
+        	egg_Alpha.anchor.setTo(0.5, 0.5);
+        	egg_Alpha.alpha = 0.4;
+        }
+        //donzen eggs for UI pick up
+        donzenEggs_UI = game.add.group();
+        explosions.createMultiple(12, 'egg');
+    	donzenEggs.setAll('anchor.x', 0.5);
+    	donzenEggs.setAll('anchor.y', 0.5);
         //  Text
         stateText = game.add.text(400,300,'', { font: '84px Comic Sans MS', fill: '#fff' });//https://phaser.io/examples/v2/games/invaders
         stateText.anchor.setTo(0.5, 0.5);
@@ -199,7 +219,7 @@ window.onload = function() {
     			blade.reset(randomX, 0);
     			
     			game.physics.arcade.moveToObject(blade,chicken_sprite,120);
-    			cleaverTime = game.time.now + 400;
+    			cleaverTime = game.time.now + 2000;
     		}
     	}
     }
@@ -210,19 +230,22 @@ window.onload = function() {
     	for(let b = 0;b<12;b++)
     	{
     		egg = donzenEggs.getFirstExists(false);
-    		egg.reset(x[b],y[b]);
+    		if(egg)
+    			egg.reset(x[b],y[b]);
     	}
     }
-    function killCleaver() {
-    	let deadBlade = cleavers.getFirstAlive();
-    	if(deadBlade)
-    	{
-    		if(deadBlade.body.onFloor())
-    		{
-    			deadBlade.kill();
-    			cleaverDespawn = game.time.now + 400;
-    		}
-    	}
+    function resurrect() {//http://www.html5gamedevs.com/topic/27103-resetting-a-group/?do=findComment&comment=155490
+        let deadEggs;
+    	let x = [86, 3440, 4440, 6300, 3873, 1305, 5600, 4898, 5330, 5720, 670, 1558];
+    	let y = [943, 876, 360, 108, 105, 225, 927, 360, 100, 360, 173, 934]
+        
+        for(let b = 0;b<12;b++)
+        {
+        		deadEggs = donzenEggs.getFirstDead();
+        		if (deadEggs) {
+        			deadEggs.reset(x[b],y[b]);
+        		}
+        }
     }
     function respawn(sprite) {
     	lives--;
@@ -251,11 +274,18 @@ window.onload = function() {
     }
     function restart() {
         //  A new level starts
+    	eggsCollected = 0;
     	health = 10;
         lives = 3;
+        donzenEggs.callAll('kill');
+        resurrect();
+        //donzenEggs.callAll('revive');
+        //spawnEggs();
         //resets the life count
         lifeBar.callAll('revive');
         healthBar.callAll('revive');
+        cleaverTime = 0;
+        donzenEggs_UI.callAll('kill');
         cleavers.callAll('kill');
         //revives the player
         chicken_sprite.revive();
@@ -266,13 +296,26 @@ window.onload = function() {
         stateText.visible = false;
     }    
     function finishChecker(sprite, door) {
-    	game.camera.target = null //http://www.html5gamedevs.com/topic/2860-camera-unfollow/
-    	chicken_sprite.kill();
-        game.camera.y = 350;
-        game.camera.x = 0;
-        stateText.text=" YOU WON! \n Click to restart";
-        stateText.visible = true;
-        game.input.onTap.addOnce(restart,this);
+    	if(eggsCollected==12)
+    	{
+    		game.camera.target = null //http://www.html5gamedevs.com/topic/2860-camera-unfollow/
+    		chicken_sprite.kill();
+    		game.camera.y = 350;
+    		game.camera.x = 0;
+    		gameStart = false;
+    		stateText.text=" YOU WON! \n Click to restart";
+    		stateText.visible = true;
+    		game.input.onTap.addOnce(restart,this);
+    	}
+    }
+    function updateEggUI() {
+    	let getEgg;
+    	getEgg = donzenEggs_UI.create(10 + (16 * eggsCollected),10, 'egg');
+    	getEgg.fixedToCamera = true;//https://phaser.io/examples/v2/camera/fixed-to-camera
+    	getEgg.cameraOffset.setTo(10 + (16 * eggsCollected),10);
+    	getEgg.anchor.setTo(0.5, 0.5);
+    	//play pick up sound
+    	eggSound.play();
     }
     function update() { //https://phaser.io/examples/v2/arcade-physics/platformer-basics
     	game.physics.arcade.overlap(chicken_sprite, door, finishChecker, null, this);
@@ -300,22 +343,17 @@ window.onload = function() {
     		cleavers.kill();
     		cleaverHitSound.play();
     		cleaverHitsChicken(cleavers, chicken_sprite);
-    		cleavers.body.velocity.x = 0;
-    		cleavers.body.velocity.y = 0;
     	});
     	game.physics.arcade.collide(chicken_sprite, donzenEggs, function(chicken_sprite, donzenEggs){
         	donzenEggs.kill();
-        	eggsCollected++;
-        	//play pick up sound
+    		eggsCollected++;
+        	//calls to up date UI
+        	updateEggUI();
     	});
     	game.physics.arcade.collide(cleavers, cleavers);
         if (game.time.now > cleaverTime)
         {
         	throwCleaver();
-        }
-        if(game.time.now > cleaverDespawn)
-        {
-        	killCleaver();
         }
     	if(left.isDown && !onWall) {
     		chicken_sprite.body.velocity.x = -150;
@@ -343,7 +381,7 @@ window.onload = function() {
     				//facing = 'idle_right';
     			}
     			
-    			if(game.time.now > idleSoundTimer) {
+    			if(game.time.now > idleSoundTimer && gameStart == true) {
     			idleSound.play();
     			idleSoundTimer = game.time.now + 600;
     			}
@@ -366,7 +404,7 @@ window.onload = function() {
         	}
         } else if(chicken_sprite.body.onFloor() && (facing == 'jump_right' || facing == 'jump_left' || facing == 'jump_idle')) {
 			facing = 'idle'
-    		if(game.time.now > idleSoundTimer) {
+    		if(game.time.now > idleSoundTimer && gameStart == true) {
         		idleSound.play();
         		idleSoundTimer = game.time.now + 600;
     		}
@@ -420,8 +458,8 @@ window.onload = function() {
         }
     }
     function render() {
-    	//game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 32);
-    	game.debug.text('Eggs: ' + eggsCollected + ' / ' + donzenEggs.length, 32, 50); //Temporary will add to GUI latter
+    	game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 40);
+    	game.debug.text('Time: ' + game.time.now + ' Cleaver Timer: ' + cleaverTime + ' Despawn Timer: ' + cleaverDespawn, 32, 60); //Temporary will add to GUI latter
         //game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
     	//game.debug.cameraInfo(game.camera, 32, 32);
 
