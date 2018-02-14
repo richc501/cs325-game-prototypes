@@ -234,18 +234,24 @@ window.onload = function() {
         }
     }
     function throwCleaver() {//https://phaser.io/examples/v2/games/invaders
+    	let randomX;
     	if(game.time.now > cleaverTime && gameStart == true)
     	{
     		let blade = cleavers.getFirstExists(false);
     		if(blade)
     		{
-    			let randomX=game.rnd.integerInRange(0,game.world.width);
-    			//let randomY=game.rnd.integerInRange(0,game.world.height);
-    			//cleaverSpawnSound.play();
+    			let leftSide = game.camera.x-game.camera.width;
+    			let rightSide = game.camera.x+game.camera.width;
+    			if(leftSide < 0 && rightSide<game.world.width)
+    				randomX =game.rnd.integerInRange(0,rightSide);//makes it so the cleaver spawn only in the area of chicken
+    			else if (leftSide > 0 && rightSide < game.world.width)
+    				randomX =game.rnd.integerInRange(leftSide,rightSide);
+    			else if (leftSide > 0 && rightSide > game.world.width)
+    				randomX =game.rnd.integerInRange(leftSide,game.world.width);
     			blade.reset(randomX, 0);
     			
     			game.physics.arcade.moveToObject(blade,chicken_sprite,120);
-    			cleaverTime = game.time.now + 2000;
+    			cleaverTime = game.time.now + 500;//1000;
     		}
     	}
     }
@@ -264,7 +270,7 @@ window.onload = function() {
         let deadEggs;
     	let x = [86, 3440, 4440, 6300, 3873, 1305, 5600, 4898, 5330, 5720, 670, 1558];
     	let y = [943, 876, 360, 108, 105, 225, 927, 360, 100, 360, 173, 934]
-        
+        //respawns all the eggs from death
         for(let b = 0;b<12;b++)
         {
         		deadEggs = donzenEggs.getFirstDead();
@@ -288,6 +294,7 @@ window.onload = function() {
         	gameOverScreen.anchor.setTo(0.5, 0.5);
         	gameOverScreen.fixedToCamera = true;
         	gameOverBool = true;
+        	gameStart = false;
             gameOverSound.play();
             //the "click to restart" handler
             game.input.onTap.addOnce(restart,this);
@@ -316,7 +323,7 @@ window.onload = function() {
         //resets the life count
         lifeBar.callAll('revive');
         healthBar.callAll('revive');
-        cleaverTime = 0;
+        //cleaverTime = 0;
         donzenEggs_UI.callAll('kill');
         cleavers.callAll('kill');
         //revives the player
@@ -325,6 +332,7 @@ window.onload = function() {
         if(game.camera.target == null)
         	game.camera.follow(chicken_sprite);
         //hides the text
+        gameStart = true;
         gameWonBool = false;
         gameOverBool = false;
     }    
@@ -357,6 +365,9 @@ window.onload = function() {
     	game.physics.arcade.overlap(chicken_sprite, door, finishChecker, null, this);
     	
     	game.physics.arcade.collide(donzenEggs, groundLayer);
+    	game.physics.arcade.overlap(donzenEggs, cleavers, function(donzenEggs, cleavers){//you need to be able to grab the eggs without being hurt from cleavers overlaping eggs
+    		cleavers.kill();
+    	}, null, this);
     	game.physics.arcade.collide(door, groundLayer);
 
     	game.physics.arcade.collide(chicken_sprite, groundLayer, function(chicken_sprite, groundLayer) {//http://www.emanueleferonato.com/2017/06/16/the-basics-behind-wall-jump-in-platform-games-html5-prototype-made-with-phaser-and-arcade-physics/
@@ -495,8 +506,9 @@ window.onload = function() {
     }
     function render() {
     	//game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 40);
-    	//game.debug.text('Time: ' + game.time.now + ' Cleaver Timer: ' + cleaverTime + ' Despawn Timer: ' + cleaverDespawn, 32, 60); //Temporary will add to GUI latter
-        //game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
+    	//game.debug.text('Time: ' + game.time.now + ' Cleaver Timer: ' + cleaverTime, 32, 60); //Temporary will add to GUI latter
+    	//game.debug.text('Camera x: ' + game.camera.x + 'Camera width: ' + game.camera.width , 32, 80);
+    	//game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
     	//game.debug.cameraInfo(game.camera, 32, 32);
 
     }
