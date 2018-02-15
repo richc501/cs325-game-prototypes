@@ -21,6 +21,8 @@ let lifeBar;
 let stateText;
 let explosions;
 let cleavers;
+let explodeBottles;
+let explodeBottleTime=0;
 let cleaverTime=0;
 let cleaverDespawn=10000;
 let gameStart = false;
@@ -34,6 +36,7 @@ let eggSound;
 let deathSound;
 let gameOverSound;
 let gameWonSound;
+let explodeSound;
 let gameOverScreen;
 let gameWonScreen;
 let gameWonBool = false;
@@ -74,6 +77,7 @@ window.onload = function() {
     	game.load.image('gameOverIMG', 'assets/gameOver.png');
     	game.load.image('gameWonIMG', 'assets/youWon.png');
     	game.load.spritesheet('kaboom', 'assets/weapon/explode.png', 128, 128);//https://phaser.io/examples/v2/games/tanks
+    	game.load.image('explodebottle', 'assets/weapon/explodebottle.png');//https://opengameart.org/content/drink-icon-pack
 
     	//https://phaser.io/examples/v2/audio/sound-complete
     	game.load.audio('knife_HIT', 'assets/sounds/knife_HIT.mp3');//https://freesound.org/people/Gingie/sounds/181679/
@@ -84,6 +88,7 @@ window.onload = function() {
     	game.load.audio('gameOver', 'assets/sounds/game-over2.mp3');//https://freesound.org/people/deleted_user_877451/sounds/76376/
     	game.load.audio('gameWon', 'assets/sounds/level-complete.mp3');//https://freesound.org/people/jivatma07/sounds/122255/ and https://freesound.org/people/Kastenfrosch/sounds/162473/
     	game.load.audio('deathSound', 'assets/sounds/death-sound.mp3');//https://freesound.org/people/ProjectsU012/sounds/333785/
+    	game.load.audio('explodeSound', 'assets/sounds/explosion.mp3');//https://freesound.org/people/ProjectsU012/sounds/334266/
     }
     
     function create() {
@@ -95,8 +100,8 @@ window.onload = function() {
     	gameWonSound = game.add.audio('gameWon');
     	deathSound = game.add.audio('deathSound');
     	cleaverHitSound = game.add.audio('knife_HIT');
+    	explodeSound = game.add.audio('explodeSound');
     	
-
     	
     	game.physics.startSystem(Phaser.Physics.ARCADE);
     	game.physics.arcade.checkCollision.down = false;//http://thoughts.amphibian.com/2016/01/falling-down-disable-some-phaser-world.html
@@ -123,6 +128,15 @@ window.onload = function() {
     	cleavers.setAll('outOfBoundsKill', true);
     	cleavers.setAll('checkWorldBounds', true);
         
+    	explodeBottles = game.add.group();//SODA BOTTLES
+    	explodeBottles.enableBody = true;
+    	explodeBottles.physicsBodyType = Phaser.Physics.ARCADE;
+    	explodeBottles.createMultiple(50, 'explodebottle');
+    	explodeBottles.setAll('anchor.x', 0.5);
+    	explodeBottles.setAll('anchor.y', 1);
+    	explodeBottles.setAll('outOfBoundsKill', true);
+    	explodeBottles.setAll('checkWorldBounds', true);
+    	
     	donzenEggs = game.add.group();
     	donzenEggs.enableBody = true;
     	donzenEggs.physicsBodyType = Phaser.Physics.ARCADE;
@@ -139,9 +153,15 @@ window.onload = function() {
     	chicken_sprite = game.add.sprite(0,game.world.centerY, 'chicken');
     	game.physics.enable(chicken_sprite, Phaser.Physics.ARCADE);
     	
-        explosions = game.add.group();
-        explosions.createMultiple(30, 'kaboom');
-    	
+        explosions = game.add.group();//https://phaser.io/examples/v2/games/invaders
+        explosions.enableBody = true;
+        explosions.physicsBodyType = Phaser.Physics.ARCADE;
+        explosions.createMultiple(50, 'kaboom');
+        explosions.setAll('anchor.x', 0.5);
+        explosions.setAll('anchor.y', 0.5);
+        explosions.setAll('outOfBoundsKill', true);
+    	explosions.setAll('checkWorldBounds', true);
+        
     	chicken_sprite.body.collideWorldBounds = true;
     	chicken_sprite.checkWorldBounds = true;
     	chicken_sprite.events.onOutOfBounds.add(respawn, this);
@@ -236,6 +256,28 @@ window.onload = function() {
         	respawn(chicken_sprite);
         }
     }
+    function throwBottle() {
+    	let randomX;
+    	if(game.time.now > explodeBottleTime && gameStart == true)
+    	{
+    		let bottle = explodeBottles.getFirstExists(false);
+    		if(bottle)
+    		{
+    			let leftSide = game.camera.x-game.camera.width;
+    			let rightSide = game.camera.x+game.camera.width;
+    			if(leftSide < 0 && rightSide<game.world.width)
+    				randomX =game.rnd.integerInRange(0,rightSide);//makes it so the cleaver spawn only in the area of chicken
+    			else if (leftSide > 0 && rightSide < game.world.width)
+    				randomX =game.rnd.integerInRange(leftSide,rightSide);
+    			else if (leftSide > 0 && rightSide > game.world.width)
+    				randomX =game.rnd.integerInRange(leftSide,game.world.width);
+    			bottle.reset(randomX, 0);
+    			
+    			game.physics.arcade.moveToObject(bottle,chicken_sprite,120);
+    			explodeBottleTime = game.time.now + 5000;
+    		}
+    	}
+    }
     function throwCleaver() {//https://phaser.io/examples/v2/games/invaders
     	let randomX;
     	if(game.time.now > cleaverTime && gameStart == true)
@@ -254,7 +296,7 @@ window.onload = function() {
     			blade.reset(randomX, 0);
     			
     			game.physics.arcade.moveToObject(blade,chicken_sprite,120);
-    			cleaverTime = game.time.now + 500;//1000;
+    			cleaverTime = game.time.now + 1000;
     		}
     	}
     }
@@ -303,12 +345,14 @@ window.onload = function() {
             game.input.onTap.addOnce(restart,this);
         } else {
         	deathSound.play();
-        	idleSoundTimer = game.time.now + 5000;
+        	idleSoundTimer = game.time.now + 5000;//prevents sound overlap
             game.camera.y = 350;
             game.camera.x = 0;
             health = 10;
             healthBar.callAll('revive');
             cleavers.callAll('kill');
+            explosions.callAll('kill');
+            explodeBottles.callAll('kill');
             chicken_sprite.reset(0,game.world.centerY);
         }
     }
@@ -329,6 +373,8 @@ window.onload = function() {
         lifeBar.callAll('revive');
         healthBar.callAll('revive');
         //cleaverTime = 0;
+        explosions.callAll('kill');
+        explodeBottles.callAll('kill');
         donzenEggs_UI.callAll('kill');
         cleavers.callAll('kill');
         //revives the player
@@ -373,6 +419,9 @@ window.onload = function() {
     	game.physics.arcade.overlap(donzenEggs, cleavers, function(donzenEggs, cleavers){//you need to be able to grab the eggs without being hurt from cleavers overlaping eggs
     		cleavers.kill();
     	}, null, this);
+    	game.physics.arcade.overlap(donzenEggs, explodeBottles, function(donzenEggs, cleavers){//you need to be able to grab the eggs without being hurt from cleavers overlaping eggs
+    		explodeBottles.kill();
+    	}, null, this);
     	game.physics.arcade.collide(door, groundLayer);
 
     	game.physics.arcade.collide(chicken_sprite, groundLayer, function(chicken_sprite, groundLayer) {//http://www.emanueleferonato.com/2017/06/16/the-basics-behind-wall-jump-in-platform-games-html5-prototype-made-with-phaser-and-arcade-physics/
@@ -386,6 +435,37 @@ window.onload = function() {
     			onWall = true;
     		}
     	});
+    	game.physics.arcade.collide(explodeBottles, groundLayer, function(explodeBottles, groundLayer) {
+    		//cleaverHitSound.play();
+    		explodeBottles.body.velocity.x = 0;
+    		explodeBottles.body.velocity.y = 0;
+    	});
+    	game.physics.arcade.collide(explodeBottles, explosions, function(explodeBottles, explosions){
+    		explodeBottles.kill();
+    		explosions.animations.add('kaboom');
+    		explosions.reset(explodeBottles.body.x, explodeBottles.body.y);
+    		explosions.play('kaboom', 30, false, true);
+    		explodeSound.play();
+    		explosions.body.velocity.y = -200;
+    	});
+    	game.physics.arcade.collide(explodeBottles, cleavers, function(explodeBottles, cleavers){
+    		explodeBottles.kill();
+    		cleavers.kill();
+    	    let explode = explosions.getFirstExists(false);
+    	    explode.animations.add('kaboom');
+    	    explode.reset(cleavers.body.x, cleavers.body.y);
+    	    explode.play('kaboom', 30, false, true);
+    	    explodeSound.play();
+    	    explode.body.velocity.y = -200;
+    	});
+    	game.physics.arcade.collide(explodeBottles, explodeBottles);
+    	game.physics.arcade.collide(chicken_sprite, explosions, function(chicken_sprite, explosions){
+    		chicken_sprite.body.velocity.y = -200;
+    	});
+    	game.physics.arcade.collide(explosions, cleavers, function(explosions, cleavers){
+    		cleavers.kill();
+    	});
+    	game.physics.arcade.collide(explosions, groundLayer);
     	game.physics.arcade.collide(cleavers, groundLayer, function(cleavers, groundLayer) {
     		//cleaverHitSound.play();
     		cleavers.body.velocity.x = 0;
@@ -395,6 +475,15 @@ window.onload = function() {
     		cleavers.kill();
     		cleaverHitSound.play();
     		cleaverHitsChicken(cleavers, chicken_sprite);
+    	});
+    	game.physics.arcade.collide(chicken_sprite, explodeBottles, function(chicken_sprite, explodeBottles){
+    		explodeBottles.kill();
+    	    let explode = explosions.getFirstExists(false);
+    	    explode.animations.add('kaboom');
+    	    explode.reset(chicken_sprite.body.x, chicken_sprite.body.y);
+    	    explode.play('kaboom', 30, false, true);
+    	    explodeSound.play();
+    	    explode.body.velocity.y = -200;
     	});
     	game.physics.arcade.collide(chicken_sprite, donzenEggs, function(chicken_sprite, donzenEggs){
         	donzenEggs.kill();
@@ -406,6 +495,10 @@ window.onload = function() {
         if (game.time.now > cleaverTime)
         {
         	throwCleaver();
+        }
+        if (game.time.now > explodeBottleTime)
+        {
+        	throwBottle();
         }
     	if(left.isDown && !onWall) {
     		chicken_sprite.body.velocity.x = -150;
@@ -510,7 +603,9 @@ window.onload = function() {
         }
     }
     function render() {
-    	//game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 40);
+    	game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 40);
+    	game.debug.text('Active Explosions: ' + explosions.countLiving() + ' / ' + explosions.length, 32, 60);
+    	game.debug.text('Active Explode Bottles: ' + explodeBottles.countLiving() + ' / ' + explodeBottles.length, 32, 80);
     	//game.debug.text('Time: ' + game.time.now + ' Cleaver Timer: ' + cleaverTime, 32, 60); //Temporary will add to GUI latter
     	//game.debug.text('Camera x: ' + game.camera.x + 'Camera width: ' + game.camera.width , 32, 80);
     	//game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
