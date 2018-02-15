@@ -18,7 +18,6 @@ let health = 10;
 let healthBar;
 let lives = 3;
 let lifeBar;
-let stateText;
 let explosions;
 let cleavers;
 let explodeBottles;
@@ -43,7 +42,6 @@ let gameWonBool = false;
 let gameOverBool = false;
 let idleSoundTimer=0;
 let jumpSoundTimer=0;
-//let cleaverSpawnSound;
 let cleaverHitSound;
 let donzenEggs;
 let donzenEggs_Alpha;
@@ -164,7 +162,7 @@ window.onload = function() {
         
     	chicken_sprite.body.collideWorldBounds = true;
     	chicken_sprite.checkWorldBounds = true;
-    	chicken_sprite.events.onOutOfBounds.add(respawn, this);
+    	chicken_sprite.events.onOutOfBounds.add(respawn, this);//https://www.joshmorony.com/how-to-create-an-animated-character-using-sprites-in-phaser/
     	chicken_sprite.animations.add('idle', [12,13], 4, true);
     	chicken_sprite.animations.add('right', [2,3,4,5], 7, true);
     	chicken_sprite.animations.add('left', [11,10,9,8], 7, true);
@@ -213,14 +211,7 @@ window.onload = function() {
         donzenEggs_UI = game.add.group();
         explosions.createMultiple(12, 'egg');
     	donzenEggs.setAll('anchor.x', 0.5);
-    	donzenEggs.setAll('anchor.y', 0.5);
-        //  Text
-        stateText = game.add.text(400,300,'', { font: '84px Comic Sans MS', fill: '#fff' });//https://phaser.io/examples/v2/games/invaders
-        stateText.anchor.setTo(0.5, 0.5);
-        stateText.fixedToCamera = true;//https://phaser.io/examples/v2/camera/fixed-to-camera
-        stateText.cameraOffset.setTo(400,300,game.world.centerY, 20);
-        stateText.visible = false;
-        
+    	donzenEggs.setAll('anchor.y', 0.5);        
 
         logo = game.add.sprite(400, 300, 'logo');//https://phaser.io/examples/v2/games/tanks
         logo.anchor.setTo(0.5, 0.5);
