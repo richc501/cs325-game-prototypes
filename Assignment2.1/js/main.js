@@ -60,7 +60,7 @@ window.onload = function() {
     // All loading functions will typically all be found inside "preload()".
     //Hold w Press D to wall jump right
 	//Hold w Press D let go of D then you wall jump left
-    let game = new Phaser.Game( 800, 600, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update, render: render } );
+    let game = new Phaser.Game( 800, 600, Phaser.CANVAS, 'game', { preload: preload, create: create, update: update} );
     
     function preload() {
     	game.load.spritesheet('chicken','assets/chicken_sprite_sheet.png', 16, 16);//https://opengameart.org/content/solarus-chicken
@@ -601,15 +601,5 @@ window.onload = function() {
             	}
         	}
         }
-    }
-    function render() {
-    	game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 40);
-    	game.debug.text('Active Explosions: ' + explosions.countLiving() + ' / ' + explosions.length, 32, 60);
-    	game.debug.text('Active Explode Bottles: ' + explodeBottles.countLiving() + ' / ' + explodeBottles.length, 32, 80);
-    	//game.debug.text('Time: ' + game.time.now + ' Cleaver Timer: ' + cleaverTime, 32, 60); //Temporary will add to GUI latter
-    	//game.debug.text('Camera x: ' + game.camera.x + 'Camera width: ' + game.camera.width , 32, 80);
-    	//game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,32); //MAKES PLACING SPRITES DOWN EASIER OMG
-    	//game.debug.cameraInfo(game.camera, 32, 32);
-
     }
 };
