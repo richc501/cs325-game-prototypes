@@ -69,7 +69,7 @@ window.onload = function() {
     	game.load.image('heart_left', 'assets/hearts/Hearts_left.png');
     	game.load.image('heart_right', 'assets/hearts/Hearts_right.png');
     	game.load.image('Lives', 'assets/lives/chicken_lives.png');
-    	game.load.image('cleaver', 'assets/weapon/cleaver.png');
+    	game.load.image('cleaver', 'assets/weapon/cleaver.png');//https://opengameart.org/content/crimelike-spritetile-set
     	game.load.image('logo', 'assets/logo_2.png');
     	game.load.image('logo2', 'assets/logo.png');
     	game.load.image('finish', 'assets/door.png');
