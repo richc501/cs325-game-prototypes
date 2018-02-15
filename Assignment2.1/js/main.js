@@ -31,6 +31,7 @@ let themeSong;
 let idleSound;
 let jumpSound;
 let eggSound;
+let deathSound;
 let gameOverSound;
 let gameWonSound;
 let gameOverScreen;
@@ -82,6 +83,7 @@ window.onload = function() {
     	game.load.audio('egg_sound', 'assets/sounds/eggPickUpSound.mp3');//https://freesound.org/people/bradwesson/sounds/135936/
     	game.load.audio('gameOver', 'assets/sounds/game-over2.mp3');//https://freesound.org/people/deleted_user_877451/sounds/76376/
     	game.load.audio('gameWon', 'assets/sounds/level-complete.mp3');//https://freesound.org/people/jivatma07/sounds/122255/ and https://freesound.org/people/Kastenfrosch/sounds/162473/
+    	game.load.audio('deathSound', 'assets/sounds/death-sound.mp3');//https://freesound.org/people/ProjectsU012/sounds/333785/
     }
     
     function create() {
@@ -91,6 +93,7 @@ window.onload = function() {
     	eggSound = game.add.audio('egg_sound');
     	gameOverSound = game.add.audio('gameOver');
     	gameWonSound = game.add.audio('gameWon');
+    	deathSound = game.add.audio('deathSound');
     	cleaverHitSound = game.add.audio('knife_HIT');
     	
 
@@ -280,6 +283,7 @@ window.onload = function() {
         }
     }
     function respawn(sprite) {
+    	deathSound.play();
     	lives--;
     	let life = lifeBar.getFirstAlive();
     	if(life)
