@@ -283,7 +283,6 @@ window.onload = function() {
         }
     }
     function respawn(sprite) {
-    	deathSound.play();
     	lives--;
     	let life = lifeBar.getFirstAlive();
     	if(life)
@@ -303,6 +302,8 @@ window.onload = function() {
             //the "click to restart" handler
             game.input.onTap.addOnce(restart,this);
         } else {
+        	deathSound.play();
+        	idleSoundTimer = game.time.now + 5000;
             game.camera.y = 350;
             game.camera.x = 0;
             health = 10;
@@ -434,7 +435,7 @@ window.onload = function() {
     			
     			if(game.time.now > idleSoundTimer && gameStart == true) {
     			idleSound.play();
-    			idleSoundTimer = game.time.now + 600;
+    			idleSoundTimer = game.time.now + 1000;
     			}
     			chicken_sprite.animations.play('idle');
     		}
@@ -457,7 +458,7 @@ window.onload = function() {
 			facing = 'idle'
     		if(game.time.now > idleSoundTimer && gameStart == true) {
         		idleSound.play();
-        		idleSoundTimer = game.time.now + 600;
+        		idleSoundTimer = game.time.now + 1000;
     		}
 			chicken_sprite.animations.play('idle');
         }
