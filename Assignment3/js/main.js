@@ -161,7 +161,7 @@ window.onload = function() {
         scoreText.cameraOffset.setTo(10,10);
         scoreText.visible = false;
         //  Text
-        stateText = game.add.text(400,300,'Fighter Stargazer! \n  WASD = MOVE \n   QE = ROTATE \n Spacebar = FIRE \n    Click To Start...', { font: '84px Comic Sans MS', fill: '#fff' });
+        stateText = game.add.text(400,300,'Fighter Stargazer! \n  WASD = MOVE \n   QE = ROTATE \n Spacebar = FIRE \n   Click To Start...', { font: '84px Comic Sans MS', fill: '#fff' });
         stateText.anchor.setTo(0.5, 0.5);
         stateText.fixedToCamera = true;
         stateText.cameraOffset.setTo(400,300);        
