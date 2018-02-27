@@ -66,7 +66,7 @@ window.onload = function() {
     	game.load.tilemap('map', 'assets/chickenParkour2.json', null, Phaser.Tilemap.TILED_JSON);
     	game.load.image('tiles', 'assets/ground64.png');
     	game.load.image('heart_left', 'assets/hearts/Hearts_left.png');
-    	game.load.image('heart_right', 'assets/hearts/Hearts_right.png');
+    	game.load.image('heart_right', 'assets/hearts/Hearts_Right.png');
     	game.load.image('Lives', 'assets/lives/chicken_lives.png');
     	game.load.image('cleaver', 'assets/weapon/cleaver.png');
     	game.load.image('logo', 'assets/logo_2.png');
