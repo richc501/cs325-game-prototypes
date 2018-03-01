@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Hello! Amaze!</title>
+    <title>Chicken Parkour</title>
+    <link rel="icon" href="assets/lives/chicken_lives.png">
     <script src="js/phaser.js"></script>
     <script src="js/main.js"></script>
 
@@ -23,72 +24,111 @@ body
 <body>
 <div id="game"></div>
 <div id="readme">
-<h2>Chicken Parkour WIP</h2>
+<h2>Chicken Parkour</h2>
 
 <ul>
 <li><strong>Originality:</strong>
-What is original about your game?
+<p>My game is original because it involves a chicken doing parkour while cleavers and soda bottles falling from the sky.</p>
 </li>
 
 <li><strong>Technical Merit:</strong>
-What is interesting about your game technology?
+<p>I was able to implement wall jumping with my sprite. Using the game.arcade.physics.collide with a function inside.</p>
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-What did you learn from this prototype?
-What was the easiest or hardest part of making it?
+<p>I learned how to use the arcade physics engine and create multiple sprites from groups. 
+The easiest part of making this game would be design the tile map and getting the sprites to spawn. 
+The hardest part of making this game would be implementing the health, lives and egg collection system with a decent GUI</p>   
 </li>
 
 <li><strong>Prototype Assets:</strong>
-Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+<p> All the sounds were grabed from freesound.org and some sounds I slighty modified with audacity. 
+Some sprites were grabed from online and some were made with photoshop. And used Tiled to make the tilemap.</p>
+<h3>Sounds: </h3>
 <ul>
-<li>Bouncing Phaser image: <a href="https://phaser.io/download/logo">Phaser logo</a></li>
+<li>Theme Song: <a href="https://freesound.org/people/Mrthenoronha/sounds/371516/">This audio</a><a href="https://freesound.org/people/Mrthenoronha/sounds/370294/">Combined with this audio</a></li>
+<li>Knife Hit Sound: <a href="https://freesound.org/people/Gingie/sounds/181679/">Cut a part from it.</a>
+<li>Jump Sound: <a href="https://freesound.org/people/plasterbrain/sounds/399095/">8 Bit Jump</a></li>
+<li>Idle Sound: <a href="https://freesound.org/people/Rudmer_Rotteveel/sounds/316920/">Chicken Sound</a></li>
+<li>Egg Sound: <a href="https://freesound.org/people/bradwesson/sounds/135936/">Egg Pick up</a></li>
+<li>Game Over Sound: <a href="https://freesound.org/people/deleted_user_877451/sounds/76376/">Game Over</a></li>
+<li>Game Won Sound: <a href="https://freesound.org/people/jivatma07/sounds/122255/">This Sound with</a><a href="https://freesound.org/people/Kastenfrosch/sounds/162473/"> this sound at the end of it.</a></li>
+<li>Death Sound: <a href="https://freesound.org/people/ProjectsU012/sounds/333785/">Death sound</a></li>
+<li>Explode Sound: <a href="https://freesound.org/people/ProjectsU012/sounds/333785/">Explosion</a></li>
+</ul>
+<h4>Sprites: </h4>
+<ul>
+<li>Chicken Sprite Sheet: <a href="https://opengameart.org/content/solarus-chicken">Chicken</a></li>
+<li>Tileset: <a href="assets/ground64.png">Made with photoshop</a></li>
+<li>Heart GUI: <a href="assets/hearts/heart_left.png">Made with photoshop.</a><a href="assets/hearts/heart_right.png"> Made with photoshop.</a></li>
+<li>Lives GUI: <a href="assets/lives/chicken_lives.png">Cut and pasted this from the chicken sprite sheet.</a></li>
+<li>Cleaver: <a href="https://opengameart.org/content/crimelike-spritetile-set">Got it from here.</a></li>
+<li>Title/End Screens: <a href="assets/logo_2.png">All </a><a href="assets/logo.png">made </a><a href="assets/gameOver.png">with </a><a href="assets/youWon.png">photoshop.</a></li>
+<li> Kaboom Sprite Sheet: <a href="assets/weapon/explode.png">Got from the phaser example files and used photoshop to change the color of it.</a></li>
+<li> Soda Boom Bottle: <a href="https://opengameart.org/content/drink-icon-pack">Got from here and cut one out with photoshop.</a></li>
 </ul>
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
-Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.
+<p>This game is a frakenstein of many other games off of the examples from the phaser website and other website found from google.</p>
+<ul>
+<li><a href="http://thoughts.amphibian.com/2016/01/falling-down-disable-some-phaser-world.html">To Get the world border on bottom to not exist.</a></li>
+<li><a href="https://phaser.io/examples/v2/games/invaders">Used This example to learn how to do the explosion, the GUI, and how to spawn multiple sprite.</a></li>
+<li><a href="https://www.joshmorony.com/how-to-create-an-animated-character-using-sprites-in-phaser/">To learn how to make the animations happen</a></li>
+<li><a href="https://phaser.io/examples/v2/camera/fixed-to-camera">Helped me with the camera</a></li>
+<li><a href="https://phaser.io/examples/v2/games/tanks">Taught me how to put images in for the start, and end screens</a></li>
+<li><a href="https://phaser.io/examples/v2/audio/loop">Helped make the audio loop happen.</a></li>
+<li><a href="http://www.html5gamedevs.com/topic/27103-resetting-a-group/?do=findComment&comment=155490">This helped fixed a bug with the collectable eggs from not being able to be respawned.</a></li>
+<li><a href="http://www.html5gamedevs.com/topic/2860-camera-unfollow/">Fixed a big when you finished the level and then you respawn right neext to the end of the level.</a></li>
+<li><a href="https://phaser.io/examples/v2/arcade-physics/platformer-basics">This Helped with the basics of platformers with the arcade physics</a></li>
+<li><a href="http://www.emanueleferonato.com/2017/06/16/the-basics-behind-wall-jump-in-platform-games-html5-prototype-made-with-phaser-and-arcade-physics/">This helped me implement the wall jumping chicken.</a></li>
+</ul>
 </li>
 
 <li><strong>High Concept:</strong>
-A one-sentence summary of your game.
+<p>You are a chicken and you must collect all your eggs around the map and then get to the other side to win the game.</p>
 </li>
 
 <li><strong>Theme:</strong>
-State which of the Storymatic themes you used.
+<p>Chicken</p>
 </li>
 
 <li><strong>Mandated Variety:</strong>
-State which input, randomness, genre, and play style you used in this prototype.
+<p>I used a platformer style with sprites falling from the sky that can hurt the player. With a random number genterator determing the which x position it'll spawn at.  </p>
 </li>
 
 <li><strong>Prototype Goal:</strong>
-What game mechanic is this prototype evaluating?
+<p>My mechanic I was evaluating was wall jumping, getting to the other side to win while testing a health and lives system.</p>
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-What experience do you want players to have when playing your game?
+<p>I want my players to feel like they are a chicken trying to get all the eggs and get to the other side while feeling like they will die trying.</p>
 </li>
 
 <li><strong>Gameplay:</strong>
-A paragraph describing the actions the player can perform, the system dynamics, and the core mechanic. Include a concise explanation of the prototype’s inputs and their expected effects (how to play). You can also describe game play that is not in the prototype. You may include mock-up images for parts of the game not in the prototype.
+<p>W is jump, A and D are left and right. To wall jump left or right on a block HOLD W + D/A and the let go of D/A when you touch the block. To wall jump forward left or right on a block HOLD W + HOLD A/D.
+The player can wall jump left or right with a wall next to the player. The player can use the wall jump mechanic to climb up a wall and fling themselves the direction they are facing. 
+The player goal is to find and collect all the collectable eggs before the player dies. Mean while there are cleavers that damage the player that fall from the sky and stay on the ground trying to kill the player and exploding soda bottles also falling from the sky.
+However, the exploding soda bottles does not hurt the player, but cause some of the cleavers to be removed. Only the cleavers or the player can cause the soda bottles to explode. If the player is caught in the explosion, then the player is forced in the air by the explosion.
+I wanted to include the water in the game now that is just a background layer in the tile map and make the water randomly transform to boiling peanut oil. So when the chicken trys to go take a swim the peanut oil causes a instant game over.</p>
 </li>
 
 <li><strong>Strategies:</strong>
-What player strategies do you expect will be effective at playing this game?
+<p> The best strategy is to go backwards early and move quickly since cleavers spawn every second and soda bottles spawns every five seconds around your sprite.</p>
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
-A paragraph about the world your game is set in and who the characters are. What makes the game world and its occupants unique and interesting? Do the tokens represent something? If the game has a backstory, mention it here. If the game is abstract, then say so.
-How will the dramatic tension interact with the gameplay tension?
+<p>My game is set in a pocket demenion where the god of this demenion is a mad chef that wants his chicken dinner now. The sole chicken doesn't want to become his chicken dinner, but has lost all his eggs. This chicken must find all his eggs and get to the other side to save himself from the mad chef. 
+This mad chef is enraged and starts throwing cleavers to hurt this poor chicken and even soda bottles that explode on imact from the chicken or the cleavers. This causes the chicken to have mental break downs, but overall he just want to get to the other side without becoming chicken dinner.</p>
 </li>
 
 <li><strong>Target Audience:</strong>
-A single sentence that describes the demographic you're trying to reach.
+<p>My target audience would be people that love platformers.</p>
 </li>
 
 <li><strong>Play Time:</strong>
-How long does your game take to play?
+<p>The game takes about two to three minutes to complete if you know where all the eggs are. But if you dont it may take about two extra minutes to back track through the map.
+The game really depends on your skill level and how lucky you get with the RNG not killing your chicken.</p>
 </li>
 
 </ul>
