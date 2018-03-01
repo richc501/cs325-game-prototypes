@@ -28,20 +28,31 @@ body
 
 <ul>
 <li><strong>Originality:</strong>
-<p>My game is original because it involves a chicken doing parkour while cleavers and soda bottles falling from the sky.</p>
+<p>My game is original because it involves a chicken doing parkour while cleavers and soda bottles falling from the sky with water that can turn itself to cooking peanut oil.</p>
 </li>
 
 <li><strong>Technical Merit:</strong>
-<p>I was able to implement wall jumping with my sprite. Using the game.arcade.physics.collide with a function inside.</p>
+<p>I was able to polish the wall jumping with my sprite and add the water animations along with the water being able to turn into harmful peanut oil.</p>
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-<p>I learned how to use the arcade physics engine and create multiple sprites from groups. 
-The easiest part of making this game would be design the tile map and getting the sprites to spawn. 
-The hardest part of making this game would be implementing the health, lives and egg collection system with a decent GUI</p>   
+<p>I learned that making your tile map taller messes up all your world locations, and that if you want a taller tile map do so in the beginning. 
+The easiest part of making this game fixing the wall jump to be more friendly to the player. 
+The hardest part of making this game was make the water seem like you were floating.</p>   
 </li>
 
 <li><strong>Prototype Assets:</strong>
+<p>Most assets were reused from the old prototype. I added these I made with photoshop for the water and peanut oil:</p>
+<ul>
+    <li><a href="'assets/oil/oil3wide.png">Oil 1</a></li>
+    <li><a href="assets/oil/oil5wide.png">Oil 2</a></li>
+    <li><a href="assets/oil/oil6wide.png">Oil 3</a></li>
+    <li><a href="assets/oil/water3wide.png">Water 1</a></li>
+    <li><a href="assets/oil/water5wide.png">Water 2</a></li>
+    <li><a href="assets/oil/water6wide.png">Water 3</a></li>
+</ul>
+
+<h1>Assets from old game:</h1>
 <p> All the sounds were grabed from freesound.org and some sounds I slighty modified with audacity. 
 Some sprites were grabed from online and some were made with photoshop. And used Tiled to make the tilemap.</p>
 <h3>Sounds: </h3>
@@ -70,6 +81,8 @@ Some sprites were grabed from online and some were made with photoshop. And used
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
+<h1><a href="Assignment2.1/index.html">Old Version of Game</a></h1>
+<h1>Sources From Old Game:</h1>
 <p>This game is a frakenstein of many other games off of the examples from the phaser website and other website found from google.</p>
 <ul>
 <li><a href="http://thoughts.amphibian.com/2016/01/falling-down-disable-some-phaser-world.html">To Get the world border on bottom to not exist.</a></li>
@@ -94,11 +107,12 @@ Some sprites were grabed from online and some were made with photoshop. And used
 </li>
 
 <li><strong>Mandated Variety:</strong>
-<p>I used a platformer style with sprites falling from the sky that can hurt the player. With a random number genterator determing the which x position it'll spawn at.  </p>
+<p>I used a platformer style with sprites falling from the sky that can hurt the player. With a random number genterator determing the which x position it'll spawn at.
+    I also added water to be water in the caves and have the water randomly switch from being water to being peanut oil that frys off one health point</p>
 </li>
 
 <li><strong>Prototype Goal:</strong>
-<p>My mechanic I was evaluating was wall jumping, getting to the other side to win while testing a health and lives system.</p>
+<p>My mechanic I was polishing the wall jumping, getting to the other side to win while testing a health and lives system.</p>
 </li>
 
 <li><strong>Player Experience Goals:</strong>
@@ -108,18 +122,18 @@ Some sprites were grabed from online and some were made with photoshop. And used
 <li><strong>Gameplay:</strong>
 <p>W is jump, A and D are left and right. To wall jump left or right on a block HOLD W + D/A and the let go of D/A when you touch the block. To wall jump forward left or right on a block HOLD W + HOLD A/D.
 The player can wall jump left or right with a wall next to the player. The player can use the wall jump mechanic to climb up a wall and fling themselves the direction they are facing. 
-The player goal is to find and collect all the collectable eggs before the player dies. Mean while there are cleavers that damage the player that fall from the sky and stay on the ground trying to kill the player and exploding soda bottles also falling from the sky.
+The player goal is to find and collect all the collectable eggs before the player dies. Mean while there are cleavers that damage the player that fall from the sky and stay on the ground trying to kill the player and exploding soda bottles also falling from the sky. The cleavers do despawn after twelve seconds.
 However, the exploding soda bottles does not hurt the player, but cause some of the cleavers to be removed. Only the cleavers or the player can cause the soda bottles to explode. If the player is caught in the explosion, then the player is forced in the air by the explosion.
-I wanted to include the water in the game now that is just a background layer in the tile map and make the water randomly transform to boiling peanut oil. So when the chicken trys to go take a swim the peanut oil causes a instant game over.</p>
+The water will randomly transform to boiling peanut oil. So when the chicken trys to go take a swim the peanut oil causes the player to lose one health point per one second the player is in the peanut oil.</p>
 </li>
 
 <li><strong>Strategies:</strong>
-<p> The best strategy is to go backwards early and move quickly since cleavers spawn every second and soda bottles spawns every five seconds around your sprite.</p>
+<p> The best strategy is to go backwards early and move quickly since cleavers spawn every second (but now despawn after twelve seconds) and soda bottles spawns every two and a half seconds around your sprite.</p>
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
 <p>My game is set in a pocket demenion where the god of this demenion is a mad chef that wants his chicken dinner now. The sole chicken doesn't want to become his chicken dinner, but has lost all his eggs. This chicken must find all his eggs and get to the other side to save himself from the mad chef. 
-This mad chef is enraged and starts throwing cleavers to hurt this poor chicken and even soda bottles that explode on imact from the chicken or the cleavers. This causes the chicken to have mental break downs, but overall he just want to get to the other side without becoming chicken dinner.</p>
+This mad chef is enraged and starts throwing cleavers to hurt this poor chicken and even soda bottles that explode on imact from the chicken or the cleavers. The chef's isanity has increased and now is turning the water in the caves into hot peanut oil in hopes have a fried chicken dinner. This causes the chicken to have mental break downs, but overall he just want to get to the other side without becoming chicken dinner.</p>
 </li>
 
 <li><strong>Target Audience:</strong>
