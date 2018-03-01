@@ -48,6 +48,19 @@ let donzenEggs;
 let donzenEggs_Alpha;
 let donzenEggs_UI;
 let eggsCollected = 0;
+let oil3sprite;//1
+let oil5sprite;//2
+let oil6sprite;//3
+let oil3sprite2;//4
+let water3sprite;
+let water5sprite;
+let water6sprite;
+let water3sprite2;
+let swimTimer = 0;
+let oilTimer = 0;
+let waterTimer = 5000;
+let oilNumber;
+let damageTimer = 0;
 window.onload = function() {
     // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
     // You will need to change the fourth parameter to "new Phaser.Game()" from
@@ -77,6 +90,12 @@ window.onload = function() {
     	game.load.image('gameWonIMG', 'assets/youWon.png');
     	game.load.spritesheet('kaboom', 'assets/weapon/explode.png', 128, 128);//https://phaser.io/examples/v2/games/tanks
     	game.load.image('explodebottle', 'assets/weapon/explodebottle.png');//https://opengameart.org/content/drink-icon-pack
+    	game.load.spritesheet('oil_3', 'assets/oil/oil3wide.png', 192, 64);
+    	game.load.spritesheet('oil_5', 'assets/oil/oil5wide.png', 320, 64);
+    	game.load.spritesheet('oil_6', 'assets/oil/oil6wide.png', 384, 64);
+    	game.load.spritesheet('water_3', 'assets/oil/water3wide.png', 192, 64);
+    	game.load.spritesheet('water_5', 'assets/oil/water5wide.png', 320, 64);
+    	game.load.spritesheet('water_6', 'assets/oil/water6wide.png', 384, 64);
 
     	//https://phaser.io/examples/v2/audio/sound-complete
     	game.load.audio('knife_HIT', 'assets/sounds/knife_HIT.mp3');//https://freesound.org/people/Gingie/sounds/181679/
@@ -113,11 +132,10 @@ window.onload = function() {
     	groundLayer = map.createLayer('GroundLayer');
     	backgroundLayer = map.createLayer('BackGroundLayer');
     	caveLayer = map.createLayer('CaveBackGroundLayer');
-    	waterLayer = map.createLayer('WaterLayer');
+    	//waterLayer = map.createLayer('WaterLayer');
     	finishLayer = map.createLayer('FinishLayer');
     	groundLayer.resizeWorld();
-    	map.setCollisionBetween(0,7, true, 'GroundLayer')
-    	
+    	map.setCollisionBetween(0,7, true, 'GroundLayer');
     	cleavers = game.add.group();
     	cleavers.enableBody = true;
     	cleavers.physicsBodyType = Phaser.Physics.ARCADE;
@@ -220,12 +238,59 @@ window.onload = function() {
         stateText.cameraOffset.setTo(400,300,game.world.centerY, 20);
         stateText.visible = false;
         
+        
+        water3sprite = game.add.sprite(192, 1280, 'water_3');
+        water3sprite.animations.add('water3', [0,1], 5, true);
+        water3sprite.animations.play('water3');
+        
+        water5sprite = game.add.sprite(2817, 1471, 'water_5');
+        water5sprite.animations.add('water5', [0,1], 5, true);
+        water5sprite.animations.play('water5');
+        
+        water6sprite = game.add.sprite(3456, 1471, 'water_6');
+        water6sprite.animations.add('water6', [0,1], 5, true);
+        water6sprite.animations.play('water6');
+        
+        water3sprite2 = game.add.sprite(5376, 1407, 'water_3');
+        water3sprite2.animations.add('water3_2', [0,1], 5, true);
+        water3sprite2.animations.play('water3_2');
+        
+        oil3sprite = game.add.sprite(192, 1280, 'oil_3');
+        oil3sprite.animations.add('oil3', [0,1], 5, true);
+        oil3sprite.animations.play('oil3');
 
+        oil5sprite = game.add.sprite(2817, 1471, 'oil_5');
+        oil5sprite.animations.add('oil5', [0,1], 5, true);
+        oil5sprite.animations.play('oil5');
+        
+        oil6sprite = game.add.sprite(3456, 1471, 'oil_6');
+        oil6sprite.animations.add('oil6', [0,1], 5, true);
+        oil6sprite.animations.play('oil6');
+        
+        oil3sprite2 = game.add.sprite(5376, 1407, 'oil_3');
+        oil3sprite2.animations.add('oil3_2', [0,1], 5, true);
+        oil3sprite2.animations.play('oil3_2');
+        
+        oil3sprite.kill();
+        oil5sprite.kill();
+        oil6sprite.kill();
+        oil3sprite2.kill();
+        
+        game.physics.enable(water3sprite, Phaser.Physics.ARCADE);
+        game.physics.enable(water5sprite, Phaser.Physics.ARCADE);
+        game.physics.enable(water6sprite, Phaser.Physics.ARCADE);
+        
+        game.physics.enable(oil3sprite, Phaser.Physics.ARCADE);
+        game.physics.enable(oil5sprite, Phaser.Physics.ARCADE);
+        game.physics.enable(oil6sprite, Phaser.Physics.ARCADE);
+        
         logo = game.add.sprite(400, 300, 'logo');//https://phaser.io/examples/v2/games/tanks
         logo.anchor.setTo(0.5, 0.5);
         logo.fixedToCamera = true;
         game.input.onDown.add(removeLogo, this);
         game.sound.setDecodedCallback(themeSong, start, this);//https://phaser.io/examples/v2/audio/loop
+        
+
     }
     function removeLogo() {//https://phaser.io/examples/v2/games/tanks
         game.input.onDown.remove(removeLogo, this);
@@ -413,10 +478,163 @@ window.onload = function() {
     	//play pick up sound
     	eggSound.play();
     }
+    function oilDamage() {
+    	if(game.time.now>damageTimer)
+    	{
+			health--;
+			let lifeHearts = healthBar.getFirstAlive();
+			if(lifeHearts)
+				lifeHearts.kill();
+			cleaverHitSound.play();
+		    // When the player dies
+		    if (health < 1)
+		    {
+		    	respawn(chicken_sprite);
+		    }
+		    damageTimer = game.time.now + 1000;
+    	}
+    }
     function update() { //https://phaser.io/examples/v2/arcade-physics/platformer-basics
     	game.physics.arcade.overlap(chicken_sprite, door, finishChecker, null, this);
+    	game.physics.arcade.overlap(chicken_sprite, water3sprite2, function(chicken_sprite, water3sprite2){
+    		chicken_sprite.body.velocity.x = 0;
+    		if(game.time.now > swimTimer)
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(30,100);
+    			swimTimer = game.time.now+100;
+    		}
+    		else 
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(-100,-30);
+    		}
+    	}, null, this);
+    	game.physics.arcade.overlap(chicken_sprite, water3sprite, function(chicken_sprite, water3sprite){
+    		chicken_sprite.body.velocity.x = 0;
+    		if(game.time.now > swimTimer)
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(30,100);
+    			swimTimer = game.time.now+100;
+    		}
+    		else 
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(-100,-30);
+    		}
+    	}, null, this);
+    	game.physics.arcade.overlap(chicken_sprite, water5sprite, function(chicken_sprite, water5sprite){
+    		chicken_sprite.body.velocity.x = 0;
+    		if(game.time.now > swimTimer)
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(30,100);
+    			swimTimer = game.time.now+100;
+    		}
+    		else 
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(-100,-30);
+    		}
+    	}, null, this);
+    	
+    	game.physics.arcade.overlap(chicken_sprite, water6sprite, function(chicken_sprite, water6sprite){
+    		chicken_sprite.body.velocity.x = 0;
+    		if(game.time.now > swimTimer)
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(30,100);
+    			swimTimer = game.time.now+100;
+    		}
+    		else 
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(-100,-30);
+    		}
+    	}, null, this);
+    	
+    	game.physics.arcade.overlap(chicken_sprite, oil3sprite2, function(chicken_sprite, oil3sprite2){
+    		chicken_sprite.body.velocity.x = 0;
+    		chicken_sprite.body.velocity.y = game.rnd.integerInRange(-3,-5);
+    		oilDamage();
+    	}, null, this);
+    	game.physics.arcade.overlap(chicken_sprite, oil3sprite, function(chicken_sprite, oil3sprite){
+    		chicken_sprite.body.velocity.x = 0;
+    		chicken_sprite.body.velocity.y = game.rnd.integerInRange(-3,-5);
+    		oilDamage();
+    	}, null, this);
+    	game.physics.arcade.overlap(chicken_sprite, oil5sprite, function(chicken_sprite, oil5sprite){
+    		chicken_sprite.body.velocity.x = 0;
+    		chicken_sprite.body.velocity.y = game.rnd.integerInRange(-3,-5);
+    		oilDamage();
+    	}, null, this);
+    	
+    	game.physics.arcade.overlap(chicken_sprite, oil6sprite, function(chicken_sprite, oil6sprite){
+    		chicken_sprite.body.velocity.x = 0;
+    		chicken_sprite.body.velocity.y = game.rnd.integerInRange(-3,-5);
+    		oilDamage();
+    	}, null, this);
+    	
+    	game.physics.arcade.collide(water3sprite, groundLayer);//1
+    	game.physics.arcade.collide(water5sprite, groundLayer);//2
+    	game.physics.arcade.collide(water6sprite, groundLayer);//3
+    	game.physics.arcade.collide(water3sprite2, groundLayer);//4
+    	
+    	game.physics.arcade.collide(oil3sprite, groundLayer);//1
+    	game.physics.arcade.collide(oil5sprite, groundLayer);//2
+    	game.physics.arcade.collide(oil6sprite, groundLayer);//3
+    	game.physics.arcade.collide(oil3sprite2, groundLayer);//4
     	
     	game.physics.arcade.collide(donzenEggs, groundLayer);
+    	
+    	if(game.time.now > oilTimer)
+    	{
+    		oilNumber = game.rnd.integerInRange(1,3);
+    		switch(oilNumber)
+    		{
+	    		case 1:
+	    			oil3sprite.revive();
+	    			oil3sprite.reset(192, 1280);
+	    			water3sprite.kill();
+	    			break;
+	    		case 2:
+	    			oil5sprite.revive();
+	    			oil5sprite.reset(2817, 1471);
+	    			water5sprite.kill();
+	    			break;
+	    		case 3:
+	    			oil6sprite.revive();
+	    			oil6sprite.reset(3456, 1471);
+	    			water6sprite.kill();
+	    			break;
+	    		case 4:
+	    			oil3sprite2.revive();
+	    			oil3sprite2.reset(5376, 1407);
+	    			water3sprite2.kill();
+	    			break;
+    		}
+    		oilTimer = game.time.now + 5000;
+    	}
+    	if(game.time.now > waterTimer)
+    	{
+    		switch(oilNumber)
+    		{
+	    		case 1:
+	    			water3sprite.revive();
+	    			water3sprite.reset(192, 1280);
+	    			oil3sprite.kill();
+	    			break;
+	    		case 2:
+	    			water5sprite.revive();
+	    			water5sprite.reset(2817, 1471);
+	    			oil5sprite.kill();
+	    			break;
+	    		case 3:
+	    			water6sprite.revive();
+	    			water6sprite.reset(3456, 1471);
+	    			oil6sprite.kill();
+	    			break;
+	    		case 4:
+	    			water3sprite2.revive();
+	    			water3sprite2.reset(5376, 1407);
+	    			oil3sprite2.kill();
+	    			break;
+    		}
+    		waterTimer = game.time.now + 5000;
+    	}
     	game.physics.arcade.overlap(donzenEggs, cleavers, function(donzenEggs, cleavers){//you need to be able to grab the eggs without being hurt from cleavers overlaping eggs
     		cleavers.kill();
     	}, null, this);
@@ -461,7 +679,8 @@ window.onload = function() {
     	});
     	game.physics.arcade.collide(explodeBottles, explodeBottles);
     	game.physics.arcade.collide(chicken_sprite, explosions, function(chicken_sprite, explosions){
-    		chicken_sprite.body.velocity.y = -200;
+    		chicken_sprite.body.velocity.y = -100;
+    		chicken_sprite.body.velocity.x = 0;
     	});
     	game.physics.arcade.collide(explosions, cleavers, function(explosions, cleavers){
     		cleavers.kill();
@@ -485,6 +704,8 @@ window.onload = function() {
     	    explode.play('kaboom', 30, false, true);
     	    explodeSound.play();
     	    explode.body.velocity.y = -200;
+    		chicken_sprite.body.velocity.y = -200;
+    		chicken_sprite.body.velocity.x = 0;
     	});
     	game.physics.arcade.collide(chicken_sprite, donzenEggs, function(chicken_sprite, donzenEggs){
         	donzenEggs.kill();
@@ -619,12 +840,12 @@ window.onload = function() {
         }
     }
     function render() {
-    	//game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 40);
-    	//game.debug.text('Active Explosions: ' + explosions.countLiving() + ' / ' + explosions.length, 32, 60);
-    	//game.debug.text('Active Explode Bottles: ' + explodeBottles.countLiving() + ' / ' + explodeBottles.length, 32, 80);
+    	game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 40);
+    	game.debug.text('Active Explosions: ' + explosions.countLiving() + ' / ' + explosions.length, 32, 60);
+    	game.debug.text('Active Explode Bottles: ' + explodeBottles.countLiving() + ' / ' + explodeBottles.length, 32, 80);
     	//game.debug.text('Time: ' + game.time.now + ' Cleaver Timer: ' + cleaverTime, 32, 60); //Temporary will add to GUI latter
     	//game.debug.text('Camera x: ' + game.camera.x + 'Camera width: ' + game.camera.width , 32, 80);
-    	//game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,100); //MAKES PLACING SPRITES DOWN EASIER OMG
+    	game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,100); //MAKES PLACING SPRITES DOWN EASIER OMG
     	//game.debug.cameraInfo(game.camera, 32, 32);
 
     }
