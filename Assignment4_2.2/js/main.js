@@ -243,7 +243,7 @@ window.onload = function() {
         water3sprite.animations.add('water3', [0,1], 5, true);
         water3sprite.animations.play('water3');
         
-        water5sprite = game.add.sprite(2817, 1471, 'water_5');
+        water5sprite = game.add.sprite(2816, 1471, 'water_5');
         water5sprite.animations.add('water5', [0,1], 5, true);
         water5sprite.animations.play('water5');
         
@@ -251,7 +251,7 @@ window.onload = function() {
         water6sprite.animations.add('water6', [0,1], 5, true);
         water6sprite.animations.play('water6');
         
-        water3sprite2 = game.add.sprite(5376, 1407, 'water_3');
+        water3sprite2 = game.add.sprite(5376, 1409, 'water_3');
         water3sprite2.animations.add('water3_2', [0,1], 5, true);
         water3sprite2.animations.play('water3_2');
         
@@ -259,7 +259,7 @@ window.onload = function() {
         oil3sprite.animations.add('oil3', [0,1], 5, true);
         oil3sprite.animations.play('oil3');
 
-        oil5sprite = game.add.sprite(2817, 1471, 'oil_5');
+        oil5sprite = game.add.sprite(2816, 1471, 'oil_5');
         oil5sprite.animations.add('oil5', [0,1], 5, true);
         oil5sprite.animations.play('oil5');
         
@@ -267,7 +267,7 @@ window.onload = function() {
         oil6sprite.animations.add('oil6', [0,1], 5, true);
         oil6sprite.animations.play('oil6');
         
-        oil3sprite2 = game.add.sprite(5376, 1407, 'oil_3');
+        oil3sprite2 = game.add.sprite(5376, 1409, 'oil_3');
         oil3sprite2.animations.add('oil3_2', [0,1], 5, true);
         oil3sprite2.animations.play('oil3_2');
         
@@ -279,10 +279,12 @@ window.onload = function() {
         game.physics.enable(water3sprite, Phaser.Physics.ARCADE);
         game.physics.enable(water5sprite, Phaser.Physics.ARCADE);
         game.physics.enable(water6sprite, Phaser.Physics.ARCADE);
+        game.physics.enable(water3sprite2, Phaser.Physics.ARCADE);
         
         game.physics.enable(oil3sprite, Phaser.Physics.ARCADE);
         game.physics.enable(oil5sprite, Phaser.Physics.ARCADE);
         game.physics.enable(oil6sprite, Phaser.Physics.ARCADE);
+        game.physics.enable(oil3sprite2, Phaser.Physics.ARCADE);
         
         logo = game.add.sprite(400, 300, 'logo');//https://phaser.io/examples/v2/games/tanks
         logo.anchor.setTo(0.5, 0.5);
@@ -496,18 +498,7 @@ window.onload = function() {
     }
     function update() { //https://phaser.io/examples/v2/arcade-physics/platformer-basics
     	game.physics.arcade.overlap(chicken_sprite, door, finishChecker, null, this);
-    	game.physics.arcade.overlap(chicken_sprite, water3sprite2, function(chicken_sprite, water3sprite2){
-    		chicken_sprite.body.velocity.x = 0;
-    		if(game.time.now > swimTimer)
-    		{
-    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(30,100);
-    			swimTimer = game.time.now+100;
-    		}
-    		else 
-    		{
-    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(-100,-30);
-    		}
-    	}, null, this);
+
     	game.physics.arcade.overlap(chicken_sprite, water3sprite, function(chicken_sprite, water3sprite){
     		chicken_sprite.body.velocity.x = 0;
     		if(game.time.now > swimTimer)
@@ -545,7 +536,18 @@ window.onload = function() {
     			chicken_sprite.body.velocity.y = game.rnd.integerInRange(-100,-30);
     		}
     	}, null, this);
-    	
+    	game.physics.arcade.overlap(chicken_sprite, water3sprite2, function(chicken_sprite, water3sprite2){
+    		chicken_sprite.body.velocity.x = 0;
+    		if(game.time.now > swimTimer)
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(30,100);
+    			swimTimer = game.time.now+100;
+    		}
+    		else 
+    		{
+    			chicken_sprite.body.velocity.y = game.rnd.integerInRange(-100,-30);
+    		}
+    	}, null, this);
     	game.physics.arcade.overlap(chicken_sprite, oil3sprite2, function(chicken_sprite, oil3sprite2){
     		chicken_sprite.body.velocity.x = 0;
     		chicken_sprite.body.velocity.y = game.rnd.integerInRange(-3,-5);
@@ -582,7 +584,7 @@ window.onload = function() {
     	
     	if(game.time.now > oilTimer)
     	{
-    		oilNumber = game.rnd.integerInRange(1,3);
+    		oilNumber = game.rnd.integerInRange(1,4);
     		switch(oilNumber)
     		{
 	    		case 1:
@@ -592,7 +594,7 @@ window.onload = function() {
 	    			break;
 	    		case 2:
 	    			oil5sprite.revive();
-	    			oil5sprite.reset(2817, 1471);
+	    			oil5sprite.reset(2816, 1471);
 	    			water5sprite.kill();
 	    			break;
 	    		case 3:
@@ -602,7 +604,7 @@ window.onload = function() {
 	    			break;
 	    		case 4:
 	    			oil3sprite2.revive();
-	    			oil3sprite2.reset(5376, 1407);
+	    			oil3sprite2.reset(5376, 1409);
 	    			water3sprite2.kill();
 	    			break;
     		}
@@ -619,7 +621,7 @@ window.onload = function() {
 	    			break;
 	    		case 2:
 	    			water5sprite.revive();
-	    			water5sprite.reset(2817, 1471);
+	    			water5sprite.reset(2816, 1471);
 	    			oil5sprite.kill();
 	    			break;
 	    		case 3:
@@ -629,7 +631,7 @@ window.onload = function() {
 	    			break;
 	    		case 4:
 	    			water3sprite2.revive();
-	    			water3sprite2.reset(5376, 1407);
+	    			water3sprite2.reset(5376, 1409);
 	    			oil3sprite2.kill();
 	    			break;
     		}
@@ -840,12 +842,12 @@ window.onload = function() {
         }
     }
     function render() {
-    	game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 40);
-    	game.debug.text('Active Explosions: ' + explosions.countLiving() + ' / ' + explosions.length, 32, 60);
-    	game.debug.text('Active Explode Bottles: ' + explodeBottles.countLiving() + ' / ' + explodeBottles.length, 32, 80);
+    	//game.debug.text('Active Cleavers: ' + cleavers.countLiving() + ' / ' + cleavers.length, 32, 40);
+    	//game.debug.text('Active Explosions: ' + explosions.countLiving() + ' / ' + explosions.length, 32, 60);
+    	//game.debug.text('Active Explode Bottles: ' + explodeBottles.countLiving() + ' / ' + explodeBottles.length, 32, 80);
     	//game.debug.text('Time: ' + game.time.now + ' Cleaver Timer: ' + cleaverTime, 32, 60); //Temporary will add to GUI latter
     	//game.debug.text('Camera x: ' + game.camera.x + 'Camera width: ' + game.camera.width , 32, 80);
-    	game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,100); //MAKES PLACING SPRITES DOWN EASIER OMG
+    	//game.debug.text('X:'+ game.input.mousePointer.worldX + ' Y: ' + game.input.mousePointer.worldY,32,100); //MAKES PLACING SPRITES DOWN EASIER OMG
     	//game.debug.cameraInfo(game.camera, 32, 32);
 
     }
