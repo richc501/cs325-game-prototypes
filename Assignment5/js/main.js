@@ -44,6 +44,7 @@ window.onload = function() {
     let scoreString = '';
     let scoreText;
     let stateText;
+    let themeSong;
     function preload() 
     {
     	game.load.tilemap('map', 'assets/pirategame.json', null, Phaser.Tilemap.TILED_JSON);
@@ -61,10 +62,12 @@ window.onload = function() {
     	game.load.audio('explodeSound', 'assets/sounds/explosion.mp3');//https://freesound.org/people/ProjectsU012/sounds/334266/
     	game.load.audio('deathSound', 'assets/sounds/death-sound.mp3');//https://freesound.org/people/ProjectsU012/sounds/333785/
     	game.load.audio('gameOver', 'assets/sounds/game-over2.mp3');//https://freesound.org/people/deleted_user_877451/sounds/76376/
+    	game.load.audio('themeSong', 'assets/sounds/loop.mp3')//https://freesound.org/people/ShadyDave/sounds/325407/
     }
 
     function create() 
     {
+    	themeSong = game.add.audio('theme_song');
     	explodeSound = game.add.audio('explodeSound');
     	deathSound = game.add.audio('deathSound');
     	gameOverSound = game.add.audio('gameOver');
@@ -158,8 +161,12 @@ window.onload = function() {
     	rotateRight = game.input.keyboard.addKey(Phaser.Keyboard.D);
     	fireLeft = game.input.keyboard.addKey(Phaser.Keyboard.J);
     	fireRight = game.input.keyboard.addKey(Phaser.Keyboard.K);
+    	
+    	game.sound.setDecodedCallback(themeSong, start, this);//https://phaser.io/examples/v2/audio/loop
     }
-    
+    function start() {
+    	themeSong.loopFull(0.6);
+    }
     function playGame()
     {
     	scoreText.visible = true;
