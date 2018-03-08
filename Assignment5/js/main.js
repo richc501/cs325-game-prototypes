@@ -67,7 +67,7 @@ window.onload = function() {
 
     function create() 
     {
-    	themeSong = game.add.audio('theme_song');
+    	themeSong = game.add.audio('themeSong');
     	explodeSound = game.add.audio('explodeSound');
     	deathSound = game.add.audio('deathSound');
     	gameOverSound = game.add.audio('gameOver');
