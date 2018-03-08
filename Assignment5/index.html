@@ -2,7 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Hello! Amaze!</title>
+    <title>The Lone Pirate!</title>
+    <link rel="icon" href="assets/health/lives.png">
     <script src="js/phaser.js"></script>
     <script src="js/main.js"></script>
 
@@ -22,72 +23,86 @@ body
 <body>
 <div id="game"></div>
 <div id="readme">
-<h2>Your game title</h2>
+<h2>The Lone Pirate</h2>
 
 <ul>
 <li><strong>Originality:</strong>
-What is original about your game?
+<p>The game is original because it has a left and right cannon fire.</p>
 </li>
 
 <li><strong>Technical Merit:</strong>
-What is interesting about your game technology?
+<p>This game is penpends on rng to spawn all the templars and which each have a chance to fire cannon balls.</p>
 </li>
 
 <li><strong>Prototype Postmortem:</strong>
-What did you learn from this prototype?
-What was the easiest or hardest part of making it?
+<p>I learned that I should really not make a game a day before the due date. The easiest part was setting up the player controls. The hardest part was deciding where the templars should be allowed to spawn without spawing on the islands.</p>
 </li>
 
 <li><strong>Prototype Assets:</strong>
-Did you make your prototype assets from scratch? Did you borrow them? Cite your sources here.
+<p>Some assets I reused from last games and others are grabbed from online</p>
+<h1><a href="http://kenney.nl/assets/pirate-pack">These Assets are from here: </a></h1>
 <ul>
-<li>Bouncing Phaser image: <a href="https://phaser.io/download/logo">Phaser logo</a></li>
+<li><a href="assets/tiles_sheet.png">Tile sheet</a></li>
+<li><a href="assets/cannonBall.png">Cannon Ball</a></li>
+<li><a href="assets/playership.png">Player Ship</a></li>
+<li><a href="assets/enemy.png">Templar Ship</a></li>
+<li><a href="assets/health/heart.png">Health Bar Image</a></li>
+<li><a href="assets/health/lives.png">Life Bar Image</a></li>
+</ul>
+<h1>These assets are from my other games and just reused them: </h1>
+<ul>
+<li><a href="assets/explode.png">From </a><a href="https://phaser.io/examples/v2/games/tanks"> This game</a></li>
+<li><a href="https://freesound.org/people/ProjectsU012/sounds/334266/">Explode Sound</a></li>
+<li><a href="https://freesound.org/people/deleted_user_877451/sounds/76376/">Game Over Sound</a></li>
+<li><a href="https://freesound.org/people/ProjectsU012/sounds/333785/">Death Sound</a></li>
 </ul>
 </li>
 
 <li><strong>Prototype Closest Other Game:</strong>
-Which other game most closely resembles your game? If you are borrowing code from a Phaser Example, you must say so here. If you borrow code from elsewhere, you must say so here.
+<p>I used code from all my past games to make this game. The closest game would be my <a href="https://richc501.github.io/cs325-game-prototypes/Assignment3/">Fighter Stargazer!</a>, but is not an iteration. Just did not have time to find other code to help me, so I chose to use what I learned from the past games I made.</p>
 </li>
 
 <li><strong>High Concept:</strong>
-A one-sentence summary of your game.
+<p> You are a pirate surrounded by templar ships that you need to kill in order to win. </p>
 </li>
 
 <li><strong>Theme:</strong>
-State which of the Storymatic themes you used.
+<p> Pirate </p>
 </li>
 
 <li><strong>Mandated Variety:</strong>
-State which input, randomness, genre, and play style you used in this prototype.
+<p> All the templar ships spawn with rng, and all shoot based off rng. </p>
 </li>
 
 <li><strong>Prototype Goal:</strong>
-What game mechanic is this prototype evaluating?
+<p> The prototyp goal was to make a ship control of forward based off the direction of the ship and have a drift like turning too. </p>
 </li>
 
 <li><strong>Player Experience Goals:</strong>
-What experience do you want players to have when playing your game?
+<p>Players will want to keep playing to get the highest score possible</p>
 </li>
 
 <li><strong>Gameplay:</strong>
-A paragraph describing the actions the player can perform, the system dynamics, and the core mechanic. Include a concise explanation of the prototype’s inputs and their expected effects (how to play). You can also describe game play that is not in the prototype. You may include mock-up images for parts of the game not in the prototype.
+<p>The player uses W to move forward, A and D to rotate, and S to drop their anchor. The player can shoot cannon balls using J and K. The templars spawn and move based off rng, and shoot the player. 
+The player only has ten health points, and only three lives availble. If the player loses all their lives the player loses. The player can win by killing all the templar ships. As the templar ships number get low the more cannon balls are fire by them.
+I wanted to make a left and right boardside fire system, but could figure out the best way to do that. After that I wanted to a system where the pirate captain can jump out of the ship on the island and find tresure at an X mark. Then I had the idea of being able to board and take over other ships. Though I did not get time to do this.</p>
 </li>
 
 <li><strong>Strategies:</strong>
-What player strategies do you expect will be effective at playing this game?
+<p>The best stratigy is to use the forts as cover and try and fire J and K at different times since they are on the own independent timers.
 </li>
 
 <li><strong>Story/Setting/Premise:</strong>
-A paragraph about the world your game is set in and who the characters are. What makes the game world and its occupants unique and interesting? Do the tokens represent something? If the game has a backstory, mention it here. If the game is abstract, then say so.
-How will the dramatic tension interact with the gameplay tension?
+<p>This game is set in a random ocean somewhere. You are the last of your pirate fleet and you are surroned by templar ships that want to kill you. Your goal is to kill them all before they kill you. You must fire all the cannon balls you have. You hope that their aim is off as you attempt to avenge your fellow fleet that has died. </p>
+
 </li>
 
 <li><strong>Target Audience:</strong>
-A single sentence that describes the demographic you're trying to reach.
+<p>The target audience would be people that like pretending to play as pirates.</p>
 </li>
 
 <li><strong>Play Time:</strong>
-How long does your game take to play?
+<p> Gameplay can be really fast if you die quick, or about five to eight minutes to kill everyone without dieing.</p>
 </li>
 
 </ul>
