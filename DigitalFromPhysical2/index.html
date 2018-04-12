@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Cat v. Mouse</title>
+    <link rel="icon" href="assets/skull.png">
+    <script src="js/phaser.js"></script>
+    <script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Cat v. Mouse</h2>
+
+<ul>
+<li><strong>Originality:</strong>
+My game is turn based.
+</li>
+
+<li><strong>Technical Merit:</strong>
+<p>I implemented a turn based system using an array of booleans and made it seem like the player is "rolling a dice"</p>
+</li>
+
+<li><strong>Prototype Postmortem:</strong>
+<p>I learnt how to make a turned based game from this prototype. The easiest part was making the dice roll feel like the player is rolling it.
+The hardest part was properly getting the turns for the player and the AI to be able to go in a resonable time to allow the player to be able to see what happened. </p> 
+
+</li>
+
+<li><strong>Prototype Assets:</strong>
+<p>I made the image asset for the tilemap with photoshop. And everything else was taken from online and had slight edits that I also made with photoshop.</p>
+<ul>
+<li><a href="assets/space.png">Made with photoshop</a></li>
+</ul>
+<h1>From <a href="https://opengameart.org/content/lpc-rat-cat-and-dog">HERE:</a></h1>
+<ul>
+<li><a href="assets/cat.png">Cat</a></li>
+<li><a href="assets/mouse.png">Cat</a></li>
+</ul>
+<h1>From <a href="https://opengameart.org/content/white-dices">HERE:</a></h1>
+<ul>
+<li><a href="assets/dice.png">Dice</a></li>
+</ul>
+<h1>Sound From <a href="https://freesound.org">HERE:</a></h1>
+<ul>
+<li><a href="https://freesound.org/people/InspectorJ/sounds/415209/">Cat Sound From Here</a></li>
+<li><a href="https://freesound.org/people/levelclearer/sounds/403380/">Theme Sound From Here</a></li>
+</ul>
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+<p>This game resembles my recent physical game I made that is very simmilar except all skulls move instead of one random one and the mouse can kill the skulls. All code I used was from old projects. The only thing is I wanted a shadow with the texts so I used <a href="https://phaser.io/examples/v2/text/center-text">THIS.</a></p>
+</li>
+
+<li><strong>High Concept:</strong>
+<p>A turn based game of cat and mouse, where you are the cat that can die from a poison from the skulls, and need to get the mouse before you die from the skulls.</p>
+</li>
+
+<li><strong>Theme:</strong>
+<p>I choose not to use a theme this time.</p>
+</li>
+
+<li><strong>Mandated Variety:</strong>
+<p>The player, mouse and skulls all are forced to move based of a six sided die that uses a random number genorator to "roll the dice".</p>
+</li>
+
+<li><strong>Prototype Goal:</strong>
+<p>I am evaluating the turn based mechanic.</p>
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+<p>I want players to be able get lucky off the RNG and get the mouse.</p>
+</li>
+
+<li><strong>Gameplay:</strong>
+<p>This game is turned based so the order of dice rolls are the player(Cat), then the skulls(Cat's enemy), and finally the mouse(Cat's target). The player is the cat picture and moves after the dice roll after the player does a mouse clicks. Then the player can use WASD to move horizontaly and vertically depending on how many numbers the player rolled.
+The player has to try to avoid the skulls or the player will lose. The skulls move horizontaly only based another dice roll. The mouse moves diagonally too based off another dice roll. If the mouse however lands on a skull then that skull dies from the mouse. I did want to make the different turns random every other game, but ran out of time so I decided not to do it that way.</p>
+</li>
+
+<li><strong>Strategies:</strong>
+<p>The best strategy is to hope the mouse lands on a skull then it makes it easier to catch the mouse, but it will make the game slower if you do it this way.</p>
+</li>
+
+<li><strong>Story/Setting/Premise:</strong>
+<p>You are a cat hungry tring to get your prey the mouse. Although there are skulls that can kill you, but you need your dinner. However the mouse has a super strong immune system and can kill the skulls. To win you must get the mouse before the skulls get you. 
+I want the tension to be very dramatic between the cat, mouse, and skulls to the point that every game is very close to winning or losing. </p>
+</li>
+
+<li><strong>Target Audience:</strong>
+<p>The target audience is people who love playing turn based games in there browser.</p>
+</li>
+
+<li><strong>Play Time:</strong>
+<p>Play time is seconds if the player dies instanly due to unlucky RNG or around 5 to 8 minutes surrive to get the mouse.</p>
+</li>
+
+</ul>
+
+</div>
+</body>
+</html>
