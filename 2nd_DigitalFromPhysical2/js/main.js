@@ -674,30 +674,30 @@ window.onload = function() {
 	                bullet.reset(player.body.x+20, player.body.y+20);
 	                bullet.lifespan = 2000;
 	                bullet.rotation = player.rotation;
-	                game.physics.arcade.velocityFromRotation(player.rotation, 400, bullet.body.velocity);
-	                game.physics.arcade.moveToPointer(bullet, 500)
+	                game.physics.arcade.velocityFromRotation(player.rotation, 600, bullet.body.velocity);
+	                game.physics.arcade.moveToPointer(bullet, 600)
 	                blasterSound.play();
-	                bulletTime = game.time.now + 500;
+	                bulletTime = game.time.now + 250;
             	}
             	else if(playerArray[1])
             	{
 	                bullet.reset(player2.body.x+20, player2.body.y+20);
 	                bullet.lifespan = 2000;
 	                bullet.rotation = player2.rotation;
-	                game.physics.arcade.velocityFromRotation(player2.rotation, 400, bullet.body.velocity);
-	                game.physics.arcade.moveToPointer(bullet, 500)
+	                game.physics.arcade.velocityFromRotation(player2.rotation, 600, bullet.body.velocity);
+	                game.physics.arcade.moveToPointer(bullet, 600)
 	                blasterSound.play();
-	                bulletTime = game.time.now + 500;
+	                bulletTime = game.time.now + 250;
             	}
             	else if(playerArray[2])
             	{
 	                bullet.reset(player3.body.x+20, player3.body.y+20);
 	                bullet.lifespan = 2000;
 	                bullet.rotation = player.rotation;
-	                game.physics.arcade.velocityFromRotation(player3.rotation, 400, bullet.body.velocity);
-	                game.physics.arcade.moveToPointer(bullet, 500)
+	                game.physics.arcade.velocityFromRotation(player3.rotation, 600, bullet.body.velocity);
+	                game.physics.arcade.moveToPointer(bullet, 600)
 	                blasterSound.play();
-	                bulletTime = game.time.now + 500;
+	                bulletTime = game.time.now + 250;
             	}
             }
         }
